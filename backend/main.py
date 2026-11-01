@@ -1,3 +1,4 @@
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -7,7 +8,6 @@ from app.core.config import settings
 from app.core.logging import logger
 from app.core.rate_limit import RateLimitMiddleware
 from app.api.v1.router import api_router
-from app.services.random_forest_service import RandomForestService
 from app.services.rag_service import RAGService
 from app.services.symptom_extractor import SymptomExtractor
 from app.services.gemini_service import GeminiService
@@ -15,20 +15,18 @@ from app.services.gemini_service import GeminiService
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Application startup & shutdown events:
-    Pre-loads model and knowledge base assets into memory.
-    """
+    """Initialize RAG, symptom extraction, and Gemini services."""
     logger.info("Starting Arogyanvesha FastAPI Application...")
+
     try:
-        RandomForestService.get_instance()
         RAGService.get_instance()
         SymptomExtractor.get_instance()
         GeminiService.get_instance()
-        logger.info("All model and RAG services initialized successfully.")
-    except Exception as e:
+        logger.info("Core services initialized successfully.")
+    except Exception as exc:
         logger.error(
-            f"Startup error loading core services: {e}",
+            "Startup error initializing core services: %s",
+            exc,
             exc_info=True,
         )
 
@@ -44,7 +42,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -53,10 +50,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Rate limiting
 app.add_middleware(RateLimitMiddleware)
 
-# Mount API routers
 app.include_router(api_router)
 
 
@@ -72,46 +67,39 @@ def home():
 
 @app.get("/health")
 def health():
-    """Liveness probe: verifies the API process is alive and responding."""
+    """Liveness probe."""
     return {"status": "healthy", "service": settings.APP_NAME}
 
 
 @app.get("/ready")
 def readiness():
-    """
-    Readiness probe: checks that critical ML and RAG dependencies are loaded
-    and ready. Does not expose sensitive credentials or file paths.
-    """
+    """Readiness probe for RAG and symptom extraction services."""
     try:
-        rf = RandomForestService.get_instance()
         rag = RAGService.get_instance()
+        SymptomExtractor.get_instance()
+        gemini = GeminiService.get_instance()
 
-        model_ready = rf.model is not None and len(rf.features) == 377
         rag_ready = len(rag.documents) > 0
 
-        if not model_ready or not rag_ready:
+        if not rag_ready:
             raise HTTPException(
                 status_code=503,
-                detail="Services not fully initialized.",
+                detail="RAG knowledge base is not ready.",
             )
 
         return {
             "status": "ready",
-            "model_loaded": model_ready,
-            "feature_count": len(rf.features),
-            "condition_classes_count": len(rf.classes),
+            "rag_ready": rag_ready,
             "rag_documents_count": len(rag.documents),
             "ai_provider": (
-                "gemini"
-                if settings.GEMINI_API_KEY
-                else "deterministic_fallback"
+                "gemini" if gemini.client else "deterministic_fallback"
             ),
         }
 
     except HTTPException:
         raise
-    except Exception as e:
-        logger.error(f"Readiness check failed: {e}")
+    except Exception as exc:
+        logger.error("Readiness check failed: %s", exc, exc_info=True)
         raise HTTPException(
             status_code=503,
             detail="Service not ready.",
