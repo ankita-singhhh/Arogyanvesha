@@ -5,3 +5,5 @@ google-genai
 pydantic
 pydantic-settings
 huggingface_hub
+numpy
+scikit-learn
