@@ -1,5 +1,17 @@
+
+import os
 import json
 from typing import List, Dict, Tuple, Optional
+
+# Configure Hugging Face cache before downloading the model.
+HF_CACHE_DIR = "/tmp/huggingface"
+HF_HUB_CACHE_DIR = os.path.join(HF_CACHE_DIR, "hub")
+
+os.environ["HF_HOME"] = HF_CACHE_DIR
+os.environ["HF_HUB_CACHE"] = HF_HUB_CACHE_DIR
+os.environ["HUGGINGFACE_HUB_CACHE"] = HF_HUB_CACHE_DIR
+
+os.makedirs(HF_HUB_CACHE_DIR, exist_ok=True)
 
 import numpy as np
 import joblib
@@ -90,7 +102,7 @@ class RandomForestService:
             f"Loaded {len(self.features)} canonical symptom features."
         )
 
-        # Download model from Hugging Face
+        # Download model from Hugging Face using writable cache.
         logger.info(
             "Downloading Random Forest model from Hugging Face..."
         )
@@ -99,13 +111,14 @@ class RandomForestService:
             repo_id="newcoder26/Arogyanvesha-RF",
             filename="arogyanvesha_random_forest_final.joblib",
             repo_type="model",
+            cache_dir=HF_HUB_CACHE_DIR,
         )
 
         logger.info("Loading downloaded Random Forest model...")
 
         self.model = joblib.load(model_path)
 
-        # Check input dimensions
+        # Check input dimensions.
         if not hasattr(self.model, "n_features_in_"):
             raise ValueError(
                 "Model does not expose n_features_in_. "
@@ -121,7 +134,7 @@ class RandomForestService:
                 f"{len(self.features)}."
             )
 
-        # Validate class labels
+        # Validate class labels.
         if not hasattr(self.model, "classes_"):
             raise ValueError(
                 "Loaded model does not expose classes_."
@@ -137,7 +150,7 @@ class RandomForestService:
                 "Random Forest model contains no output classes."
             )
 
-        # Validate feature names if retained by the model
+        # Validate feature names if retained by the model.
         model_feature_names = getattr(
             self.model,
             "feature_names_in_",
