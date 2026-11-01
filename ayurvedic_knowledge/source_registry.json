@@ -1,0 +1,57 @@
+[
+  {
+    "source_id": "AYUSH_RESEARCH_PORTAL",
+    "source_name": "AYUSH Research Portal",
+    "organization": "Ministry of AYUSH, Government of India",
+    "source_type": "government_research_database",
+    "url": "https://arp.ayush.gov.in/",
+    "purpose": [
+      "Ayurveda research",
+      "clinical research",
+      "preclinical research",
+      "drug research",
+      "fundamental research"
+    ],
+    "retrieved_on": "2026-10-09"
+  },
+  {
+    "source_id": "AYUSH_MEDICINAL_PLANTS",
+    "source_name": "E-Charak Knowledge Resources",
+    "organization": "Ministry of AYUSH, Government of India",
+    "source_type": "government_knowledge_resource",
+    "url": "https://echarak.ayush.gov.in/knowledge_resources",
+    "purpose": [
+      "medicinal plants",
+      "botanical identity",
+      "Ayurvedic references",
+      "research bibliography"
+    ],
+    "retrieved_on": "2026-10-09"
+  },
+  {
+    "source_id": "AYUSH_NAMASTE",
+    "source_name": "NAMASTE Portal",
+    "organization": "Ministry of AYUSH, Government of India",
+    "source_type": "government_standardized_terminology",
+    "url": "https://namaste.ayush.gov.in/",
+    "purpose": [
+      "Ayurvedic terminology",
+      "standardized terminology",
+      "morbidity terminology"
+    ],
+    "retrieved_on": "2026-10-09"
+  },
+  {
+    "source_id": "NCCIH_AYURVEDA",
+    "source_name": "Ayurvedic Medicine: In Depth",
+    "organization": "National Center for Complementary and Integrative Health",
+    "source_type": "independent_health_information",
+    "url": "https://www.nccih.nih.gov/health/ayurvedic-medicine-in-depth",
+    "purpose": [
+      "evidence context",
+      "safety information",
+      "clinical evidence limitations"
+    ],
+    "retrieved_on": "2026-10-09"
+  }
+]

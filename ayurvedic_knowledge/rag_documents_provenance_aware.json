@@ -1,0 +1,1404 @@
+[
+  {
+    "document_id": "acne_ayurvedic_perspective_0",
+    "condition": "acne",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document identifies acne among chronic skin conditions for which Ayurveda may be considered as an additional treatment approach.",
+    "metadata": {
+      "condition": "acne",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acne_prakriti_2",
+    "condition": "acne",
+    "category": "prakriti",
+    "content": "Use Prakriti only as a personalization layer for traditional lifestyle guidance. Do not use Prakriti to determine a medical diagnosis.",
+    "metadata": {
+      "condition": "acne",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acne_food_3",
+    "condition": "acne",
+    "category": "food",
+    "content": "Prefer a balanced diet with adequate fruits, vegetables, whole grains and protein. Avoid presenting any single food as a proven Ayurvedic cure for acne. Individual food triggers should be tracked rather than assumed.",
+    "metadata": {
+      "condition": "acne",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acne_lifestyle_4",
+    "condition": "acne",
+    "category": "lifestyle",
+    "content": "Maintain regular sleep and daily hygiene. Avoid repeatedly touching, squeezing or picking acne lesions. Track possible personal triggers and changes in symptoms.",
+    "metadata": {
+      "condition": "acne",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acne_yoga_5",
+    "condition": "acne",
+    "category": "yoga",
+    "content": "Gentle yoga or relaxation practices may be used as general wellness support. Yoga should not replace dermatological assessment when acne is severe, infected or worsening.",
+    "metadata": {
+      "condition": "acne",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acne_traditional_options_6",
+    "condition": "acne",
+    "category": "traditional_options",
+    "content": "Ayurvedic supportive care may be considered with a qualified Ayurvedic practitioner. Do not recommend a specific oral formulation or dosage without an appropriate clinical source.",
+    "metadata": {
+      "condition": "acne",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acne_precautions_7",
+    "condition": "acne",
+    "category": "precautions",
+    "content": "Do not interpret this source as evidence that Ayurveda alone cures acne. Severe skin disease or disease not responding to Ayurvedic treatment requires appropriate referral.",
+    "metadata": {
+      "condition": "acne",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acne_warning_signs_8",
+    "condition": "acne",
+    "category": "warning_signs",
+    "content": "Severe skin infection Rapidly worsening skin condition Condition not responding to treatment",
+    "metadata": {
+      "condition": "acne",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acne_when_to_seek_care_9",
+    "condition": "acne",
+    "category": "when_to_seek_care",
+    "content": "Seek appropriate medical evaluation for severe, progressive, infected, or treatment-resistant skin disease.",
+    "metadata": {
+      "condition": "acne",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acne_evidence_10",
+    "condition": "acne",
+    "category": "evidence",
+    "content": "The AYUSH/CCRAS cross-referral material identifies acne as a chronic skin condition that may be considered for Ayurveda as an additional/supportive approach. This does not establish Ayurveda as a proven cure for acne.",
+    "metadata": {
+      "condition": "acne",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_ayurvedic_perspective_11",
+    "condition": "anxiety",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document identifies mild-to-moderate anxiety disorder as a situation where Ayurveda may be considered.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "anxiety_prakriti_13",
+    "condition": "anxiety",
+    "category": "prakriti",
+    "content": "Prakriti information may personalize general lifestyle suggestions. Prakriti should not determine psychiatric diagnosis or treatment.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_food_14",
+    "condition": "anxiety",
+    "category": "food",
+    "content": "Prefer regular, balanced meals and adequate hydration. Avoid claiming that a particular food or herb treats an anxiety disorder.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_lifestyle_15",
+    "condition": "anxiety",
+    "category": "lifestyle",
+    "content": "Maintain a regular sleep-wake schedule. Use relaxation, breathing or mindfulness practices as supportive wellness measures. Encourage appropriate social and professional support when symptoms interfere with daily life.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_yoga_16",
+    "condition": "anxiety",
+    "category": "yoga",
+    "content": "Gentle yoga, breathing practices and meditation may be used as complementary practices. Research suggests yoga may help anxiety symptoms, but evidence for diagnosed anxiety disorders is not conclusive.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_traditional_options_17",
+    "condition": "anxiety",
+    "category": "traditional_options",
+    "content": "Traditional Ayurvedic care may be considered as complementary support under qualified supervision. Do not recommend stopping prescribed psychiatric treatment in favor of Ayurveda.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "anxiety_precautions_18",
+    "condition": "anxiety",
+    "category": "precautions",
+    "content": "Ayurvedic care should not replace urgent psychiatric care for severe illness. The source describes Ayurveda management within a cross-referral framework rather than as a universal cure.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "anxiety_warning_signs_19",
+    "condition": "anxiety",
+    "category": "warning_signs",
+    "content": "Suicidal or self-injurious behavior Severe anxiety disorder Psychotic symptoms Treatment-resistant illness Need for specialized psychiatric treatment",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "anxiety_when_to_seek_care_20",
+    "condition": "anxiety",
+    "category": "when_to_seek_care",
+    "content": "Urgent professional mental-health assessment is required for suicidal behavior, psychosis, severe symptoms, or other serious psychiatric warning signs.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "anxiety_evidence_21",
+    "condition": "anxiety",
+    "category": "evidence",
+    "content": "NCCIH reports promising but insufficient evidence to conclude that yoga is effective for diagnosed anxiety disorders. AYUSH/CCRAS material allows consideration of Ayurveda for selected mild-to-moderate cases, while severe cases require appropriate medical/mental-health care.",
+    "metadata": {
+      "condition": "anxiety",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_ayurvedic_perspective_22",
+    "condition": "asthma",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document includes mild-to-moderate asthma without complications or a serious underlying cause among respiratory conditions that may be referred to Ayurveda.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "asthma_prakriti_24",
+    "condition": "asthma",
+    "category": "prakriti",
+    "content": "Prakriti can personalize general wellness suggestions only. It must not be used to assess asthma severity.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_food_25",
+    "condition": "asthma",
+    "category": "food",
+    "content": "Use a balanced diet appropriate to the person's overall health. Do not recommend food or herbal products as substitutes for prescribed asthma medication.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_lifestyle_26",
+    "condition": "asthma",
+    "category": "lifestyle",
+    "content": "Identify and avoid known personal asthma triggers where possible. Follow the person's prescribed asthma action plan. Monitor changes in breathing symptoms.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_yoga_27",
+    "condition": "asthma",
+    "category": "yoga",
+    "content": "Only gentle, comfortable breathing and yoga practices should be considered. Avoid forceful breathing practices when they trigger symptoms. Yoga must not replace inhalers or emergency asthma treatment.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_traditional_options_28",
+    "condition": "asthma",
+    "category": "traditional_options",
+    "content": "Ayurvedic supportive care may be considered only alongside appropriate asthma management. No Ayurvedic medicine or dosage should be automatically recommended by the RAG.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "asthma_precautions_29",
+    "condition": "asthma",
+    "category": "precautions",
+    "content": "Asthma can become an emergency. Ayurvedic guidance must not replace prescribed emergency or controller treatment.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "asthma_warning_signs_30",
+    "condition": "asthma",
+    "category": "warning_signs",
+    "content": "Severe breathing difficulty Rapidly worsening respiratory symptoms Signs of respiratory distress Serious underlying respiratory disease",
+    "metadata": {
+      "condition": "asthma",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "asthma_when_to_seek_care_31",
+    "condition": "asthma",
+    "category": "when_to_seek_care",
+    "content": "Emergency medical care is required for severe or rapidly worsening breathing problems.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "asthma_evidence_32",
+    "condition": "asthma",
+    "category": "evidence",
+    "content": "AYUSH/CCRAS materials identify asthma among respiratory conditions addressed within Ayurveda, while severe or emergency respiratory presentations require medical care. Ayurveda should therefore be presented as complementary rather than a replacement for established asthma treatment.",
+    "metadata": {
+      "condition": "asthma",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_ayurvedic_perspective_33",
+    "condition": "acute bronchitis",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document includes common cases of acute bronchitis without complications or serious underlying causes among respiratory conditions that may be referred to Ayurveda.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_prakriti_35",
+    "condition": "acute bronchitis",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general lifestyle suggestions but does not determine infection severity.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_food_36",
+    "condition": "acute bronchitis",
+    "category": "food",
+    "content": "Maintain adequate fluids and a balanced diet according to tolerance. Do not claim that a specific food cures acute bronchitis.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_lifestyle_37",
+    "condition": "acute bronchitis",
+    "category": "lifestyle",
+    "content": "Rest according to symptoms and maintain hydration. Avoid smoke and other respiratory irritants. Monitor symptoms for worsening or persistence.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_yoga_38",
+    "condition": "acute bronchitis",
+    "category": "yoga",
+    "content": "Avoid strenuous yoga during an acute respiratory illness. Gentle relaxation may be considered when comfortable.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_traditional_options_39",
+    "condition": "acute bronchitis",
+    "category": "traditional_options",
+    "content": "Traditional Ayurvedic supportive care may be discussed with a qualified practitioner. Do not use traditional remedies as a substitute for assessment when symptoms are severe.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_precautions_40",
+    "condition": "acute bronchitis",
+    "category": "precautions",
+    "content": "Do not assume every cough or bronchitis-like illness is suitable for Ayurvedic management. Serious underlying respiratory disease requires appropriate medical assessment.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_warning_signs_41",
+    "condition": "acute bronchitis",
+    "category": "warning_signs",
+    "content": "Breathlessness Severe respiratory symptoms High or persistent fever Signs of serious underlying disease",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_when_to_seek_care_42",
+    "condition": "acute bronchitis",
+    "category": "when_to_seek_care",
+    "content": "Seek medical evaluation when respiratory symptoms are severe, worsening, or associated with concerning signs.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "acute bronchitis_evidence_43",
+    "condition": "acute bronchitis",
+    "category": "evidence",
+    "content": "AYUSH/CCRAS cross-referral material identifies uncomplicated acute bronchitis among respiratory conditions that may be considered for Ayurveda, while serious or complicated respiratory illness requires medical evaluation.",
+    "metadata": {
+      "condition": "acute bronchitis",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_ayurvedic_perspective_44",
+    "condition": "depression",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document identifies mild-to-moderate depression as a situation where Ayurveda may be considered.",
+    "metadata": {
+      "condition": "depression",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "depression_prakriti_46",
+    "condition": "depression",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general lifestyle suggestions only. It must never be used to assess suicide risk or psychiatric severity.",
+    "metadata": {
+      "condition": "depression",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_food_47",
+    "condition": "depression",
+    "category": "food",
+    "content": "Encourage regular balanced meals and adequate hydration. Do not describe a particular food or herb as a treatment for depression.",
+    "metadata": {
+      "condition": "depression",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_lifestyle_48",
+    "condition": "depression",
+    "category": "lifestyle",
+    "content": "Maintain regular sleep and daily routine where possible. Encourage appropriate physical activity according to individual ability. Encourage social connection and professional mental-health support.",
+    "metadata": {
+      "condition": "depression",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_yoga_49",
+    "condition": "depression",
+    "category": "yoga",
+    "content": "Gentle yoga, relaxation and mindfulness may be used as complementary practices. NCCIH reports that yoga may provide small additional benefits when used with other treatment.",
+    "metadata": {
+      "condition": "depression",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_traditional_options_50",
+    "condition": "depression",
+    "category": "traditional_options",
+    "content": "Ayurvedic approaches may be considered as complementary support under qualified supervision. Do not recommend replacing prescribed antidepressant or psychiatric treatment.",
+    "metadata": {
+      "condition": "depression",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "depression_precautions_51",
+    "condition": "depression",
+    "category": "precautions",
+    "content": "Ayurveda should not replace urgent psychiatric treatment for severe depression. The source supports a cross-referral/add-on framework.",
+    "metadata": {
+      "condition": "depression",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "depression_warning_signs_52",
+    "condition": "depression",
+    "category": "warning_signs",
+    "content": "Suicidal tendency Self-injurious behavior Severe mood disorder Psychotic symptoms Depression not responding to treatment",
+    "metadata": {
+      "condition": "depression",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "depression_when_to_seek_care_53",
+    "condition": "depression",
+    "category": "when_to_seek_care",
+    "content": "Urgent professional mental-health care is required when there is suicidal behavior, psychosis, severe deterioration, or other serious psychiatric symptoms.",
+    "metadata": {
+      "condition": "depression",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "depression_evidence_54",
+    "condition": "depression",
+    "category": "evidence",
+    "content": "NCCIH reports some evidence that yoga may help depressive symptoms and may provide small additional benefits alongside other treatment. AYUSH/CCRAS material distinguishes mild-to-moderate cases from severe presentations requiring appropriate medical care.",
+    "metadata": {
+      "condition": "depression",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_ayurvedic_perspective_55",
+    "condition": "eczema",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document includes eczema among chronic skin conditions where Ayurveda may be considered as an add-on approach.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "eczema_prakriti_57",
+    "condition": "eczema",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general lifestyle guidance. It should not be used to determine the medical cause of a skin lesion.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_food_58",
+    "condition": "eczema",
+    "category": "food",
+    "content": "Use a balanced diet unless a clinician has identified a specific food allergy or intolerance. Do not automatically recommend restrictive elimination diets.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_lifestyle_59",
+    "condition": "eczema",
+    "category": "lifestyle",
+    "content": "Maintain regular skin-care practices appropriate to the individual's condition. Avoid known personal irritants or triggers. Monitor changes in skin inflammation, infection or rapid worsening.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_yoga_60",
+    "condition": "eczema",
+    "category": "yoga",
+    "content": "Gentle yoga may be used for general stress and wellness support. Yoga does not replace dermatological treatment.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_traditional_options_61",
+    "condition": "eczema",
+    "category": "traditional_options",
+    "content": "AYUSH/CCRAS material identifies eczema among chronic skin conditions that may be considered for additional Ayurvedic care. Specific herbal or topical formulations should only be recommended from an appropriate clinical source.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "eczema_precautions_62",
+    "condition": "eczema",
+    "category": "precautions",
+    "content": "Severe skin infections and serious skin disease require appropriate medical evaluation. Do not interpret cross-referral guidance as proof of cure.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "eczema_warning_signs_63",
+    "condition": "eczema",
+    "category": "warning_signs",
+    "content": "Severe skin infection Rapid worsening Extensive or serious skin disease Failure to respond to treatment",
+    "metadata": {
+      "condition": "eczema",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "eczema_when_to_seek_care_64",
+    "condition": "eczema",
+    "category": "when_to_seek_care",
+    "content": "Seek medical evaluation for severe, infected, rapidly worsening, or treatment-resistant eczema.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "eczema_evidence_65",
+    "condition": "eczema",
+    "category": "evidence",
+    "content": "AYUSH/CCRAS cross-referral material identifies eczema as a chronic skin condition that may be considered for additional Ayurveda. Severe skin infections and patients not responding to treatment require appropriate medical evaluation.",
+    "metadata": {
+      "condition": "eczema",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_ayurvedic_perspective_66",
+    "condition": "gastritis",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document includes chronic and recurrent gastritis among gastrointestinal conditions for which Ayurveda management may be considered.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "gastritis_prakriti_68",
+    "condition": "gastritis",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general dietary and lifestyle suggestions. It must not be used to determine the underlying cause of abdominal symptoms.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_food_69",
+    "condition": "gastritis",
+    "category": "food",
+    "content": "Prefer meals that are tolerated well by the individual. Avoid automatically assigning a universal Ayurvedic diet to every person. Track foods or beverages that consistently worsen symptoms.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_lifestyle_70",
+    "condition": "gastritis",
+    "category": "lifestyle",
+    "content": "Maintain regular meal timing where practical. Avoid known personal gastrointestinal triggers. Seek evaluation when symptoms are persistent, recurrent or worsening.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_yoga_71",
+    "condition": "gastritis",
+    "category": "yoga",
+    "content": "Gentle yoga and relaxation may be considered when symptoms permit. Avoid strenuous practices during significant abdominal symptoms.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_traditional_options_72",
+    "condition": "gastritis",
+    "category": "traditional_options",
+    "content": "Ayurvedic management may be considered for selected chronic or recurrent gastrointestinal conditions under qualified supervision. No formulation or dosage should be generated automatically.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "gastritis_precautions_73",
+    "condition": "gastritis",
+    "category": "precautions",
+    "content": "Complicated gastrointestinal disease requires medical care. Do not assume persistent abdominal symptoms are simple gastritis.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "gastritis_warning_signs_74",
+    "condition": "gastritis",
+    "category": "warning_signs",
+    "content": "Severe abdominal pain Persistent vomiting Gastrointestinal bleeding Progressive weight loss Signs of obstruction or shock",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "gastritis_when_to_seek_care_75",
+    "condition": "gastritis",
+    "category": "when_to_seek_care",
+    "content": "Seek medical evaluation for bleeding, severe pain, persistent vomiting, weight loss, or other serious gastrointestinal warning signs.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "gastritis_evidence_76",
+    "condition": "gastritis",
+    "category": "evidence",
+    "content": "AYUSH/CCRAS material identifies chronic/recurrent gastritis among gastrointestinal conditions that may be considered for Ayurvedic management, while complicated GI presentations require appropriate medical assessment.",
+    "metadata": {
+      "condition": "gastritis",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_ayurvedic_perspective_77",
+    "condition": "migraine",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document lists headache and migraine among neurological conditions that may be considered for Ayurveda after appropriate assessment.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "migraine_prakriti_79",
+    "condition": "migraine",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general lifestyle recommendations. It should not be used to determine whether a headache is a migraine.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_food_80",
+    "condition": "migraine",
+    "category": "food",
+    "content": "Maintain regular meals and adequate hydration. Track individual migraine triggers rather than assuming universal food triggers.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_lifestyle_81",
+    "condition": "migraine",
+    "category": "lifestyle",
+    "content": "Maintain consistent sleep and daily routines where possible. Identify personal environmental or lifestyle triggers. Keep a symptom/headache diary to identify recurring patterns.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_yoga_82",
+    "condition": "migraine",
+    "category": "yoga",
+    "content": "Gentle yoga and relaxation practices may be considered as complementary support. NCCIH reports promising but not conclusive evidence for yoga in migraine.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_traditional_options_83",
+    "condition": "migraine",
+    "category": "traditional_options",
+    "content": "CCRAS has published Ayurvedic management material that includes migraine. Specific Ayurvedic medicines or dosages should not be generated without a qualified clinical source.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "migraine_precautions_84",
+    "condition": "migraine",
+    "category": "precautions",
+    "content": "A new or unusually severe headache requires appropriate medical assessment. Ayurvedic guidance should not delay emergency evaluation.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "migraine_warning_signs_85",
+    "condition": "migraine",
+    "category": "warning_signs",
+    "content": "Sudden severe headache Headache after head injury New neurological deficit Altered consciousness Suspected stroke or intracranial disease",
+    "metadata": {
+      "condition": "migraine",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "migraine_when_to_seek_care_86",
+    "condition": "migraine",
+    "category": "when_to_seek_care",
+    "content": "Urgent medical assessment is appropriate for sudden severe headache, neurological deficits, altered consciousness, head injury, or other serious neurological signs.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "migraine_evidence_87",
+    "condition": "migraine",
+    "category": "evidence",
+    "content": "CCRAS publishes Ayurvedic management protocols that include migraine. NCCIH reports that research on yoga for migraine is promising but limited and not conclusive.",
+    "metadata": {
+      "condition": "migraine",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_ayurvedic_perspective_88",
+    "condition": "osteoarthritis",
+    "category": "ayurvedic_perspective",
+    "content": "The AYUSH cross-referral document identifies osteoarthritis among joint disorders that may be managed through Ayurveda within its cross-referral framework. It also describes Ayurvedic research and integrative treatment protocols for osteoarthritis.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "ayurvedic_perspective",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_prakriti_90",
+    "condition": "osteoarthritis",
+    "category": "prakriti",
+    "content": "Prakriti may personalize general lifestyle guidance. It should not determine the severity or structural cause of joint disease.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "prakriti",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_food_91",
+    "condition": "osteoarthritis",
+    "category": "food",
+    "content": "Use a balanced diet appropriate to the individual's nutritional needs. Avoid presenting a particular food or herb as a guaranteed treatment.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "food",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_lifestyle_92",
+    "condition": "osteoarthritis",
+    "category": "lifestyle",
+    "content": "Maintain appropriate physical activity according to ability. Use joint-friendly movement and avoid activities that clearly aggravate symptoms. Seek professional assessment when pain, swelling or function deteriorates.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "lifestyle",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_yoga_93",
+    "condition": "osteoarthritis",
+    "category": "yoga",
+    "content": "Gentle, appropriately modified yoga may support mobility and function. NCCIH reports possible benefits of yoga for knee osteoarthritis, although evidence quality is limited.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "yoga",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_traditional_options_94",
+    "condition": "osteoarthritis",
+    "category": "traditional_options",
+    "content": "CCRAS identifies osteoarthritis among conditions addressed in Ayurvedic research and management material. Specific formulations, therapies and dosages should require qualified practitioner oversight.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "traditional_options",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_precautions_95",
+    "condition": "osteoarthritis",
+    "category": "precautions",
+    "content": "Severe pain, trauma, deformity, or rapidly worsening joint symptoms require medical assessment. Do not interpret the source as establishing Ayurveda as a replacement for all conventional treatment.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "precautions",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_warning_signs_96",
+    "condition": "osteoarthritis",
+    "category": "warning_signs",
+    "content": "Severe or rapidly worsening joint pain Major trauma Marked joint deformity Loss of function requiring urgent assessment",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "warning_signs",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_when_to_seek_care_97",
+    "condition": "osteoarthritis",
+    "category": "when_to_seek_care",
+    "content": "Seek appropriate medical assessment for severe, rapidly worsening, traumatic, or function-threatening joint symptoms.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "when_to_seek_care",
+      "source_document_ids": [
+        "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001"
+      ],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": true,
+      "knowledge_origin": "AYUSH_CCRAS"
+    }
+  },
+  {
+    "document_id": "osteoarthritis_evidence_98",
+    "condition": "osteoarthritis",
+    "category": "evidence",
+    "content": "NCCIH notes that a few studies suggest some Ayurvedic preparations may reduce pain and improve function in osteoarthritis, but many trials are small or have design limitations. Therefore the system must present this as limited evidence rather than established efficacy.",
+    "metadata": {
+      "condition": "osteoarthritis",
+      "category": "evidence",
+      "source_document_ids": [],
+      "knowledge_type": "ayurvedic_guidance",
+      "source_grounded": false,
+      "knowledge_origin": "curated_enrichment"
+    }
+  },
+  {
+    "document_id": "global_safety_0",
+    "condition": "global",
+    "category": "safety_policy",
+    "content": "Arogyanvesha predictions are candidate conditions generated by machine-learning models and must not be presented as a confirmed diagnosis.",
+    "metadata": {
+      "condition": "global",
+      "category": "safety_policy",
+      "knowledge_type": "system_safety",
+      "source_grounded": false,
+      "source_document_ids": [],
+      "knowledge_origin": "system_safety"
+    }
+  },
+  {
+    "document_id": "global_safety_1",
+    "condition": "global",
+    "category": "safety_policy",
+    "content": "Ayurvedic RAG content provides source-grounded traditional and supportive information. It must not independently prescribe individualized medicines or dosages.",
+    "metadata": {
+      "condition": "global",
+      "category": "safety_policy",
+      "knowledge_type": "system_safety",
+      "source_grounded": false,
+      "source_document_ids": [],
+      "knowledge_origin": "system_safety"
+    }
+  },
+  {
+    "document_id": "global_safety_2",
+    "condition": "global",
+    "category": "safety_policy",
+    "content": "Traditional Ayurvedic perspectives and modern scientific evidence must be clearly distinguished in the generated response.",
+    "metadata": {
+      "condition": "global",
+      "category": "safety_policy",
+      "knowledge_type": "system_safety",
+      "source_grounded": false,
+      "source_document_ids": [],
+      "knowledge_origin": "system_safety"
+    }
+  },
+  {
+    "document_id": "global_safety_3",
+    "condition": "global",
+    "category": "safety_policy",
+    "content": "Serious warning signs must take priority over lifestyle or Ayurvedic self-care suggestions and should lead to appropriate medical evaluation.",
+    "metadata": {
+      "condition": "global",
+      "category": "safety_policy",
+      "knowledge_type": "system_safety",
+      "source_grounded": false,
+      "source_document_ids": [],
+      "knowledge_origin": "system_safety"
+    }
+  },
+  {
+    "document_id": "global_safety_4",
+    "condition": "global",
+    "category": "safety_policy",
+    "content": "Prakriti is used only as a personalization layer for general Ayurvedic lifestyle guidance. It is not a diagnostic model.",
+    "metadata": {
+      "condition": "global",
+      "category": "safety_policy",
+      "knowledge_type": "system_safety",
+      "source_grounded": false,
+      "source_document_ids": [],
+      "knowledge_origin": "system_safety"
+    }
+  }
+]

@@ -1,0 +1,19 @@
+{
+    "age": 22,
+    "sex": "female",
+    "lifestyle": "moderately active",
+    "medical_history": "No known chronic conditions",
+    "prakriti": {
+        "type": "Vata",
+        "scores": {
+            "Vata": 6,
+            "Pitta": 3,
+            "Kapha": 1
+        },
+        "percentages": {
+            "Vata": 60.0,
+            "Pitta": 30.0,
+            "Kapha": 10.0
+        }
+    }
+}

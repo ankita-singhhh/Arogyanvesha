@@ -1,0 +1,65 @@
+[
+  {
+    "document_id": "acne_dosha_1",
+    "condition": "acne",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "anxiety_dosha_12",
+    "condition": "anxiety",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "asthma_dosha_23",
+    "condition": "asthma",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "acute bronchitis_dosha_34",
+    "condition": "acute bronchitis",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "depression_dosha_45",
+    "condition": "depression",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "eczema_dosha_56",
+    "condition": "eczema",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "gastritis_dosha_67",
+    "condition": "gastritis",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "migraine_dosha_78",
+    "condition": "migraine",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  },
+  {
+    "document_id": "osteoarthritis_dosha_89",
+    "condition": "osteoarthritis",
+    "category": "dosha",
+    "word_count": 1,
+    "content": "{}"
+  }
+]

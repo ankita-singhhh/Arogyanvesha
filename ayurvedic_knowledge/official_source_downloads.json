@@ -1,0 +1,20 @@
+[
+  {
+    "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+    "source_id": "AYUSH_RESEARCH_PORTAL",
+    "title": "Ayurveda and Conventional Medicine - Cross Referral Guidance",
+    "url": "https://arp.ayush.gov.in/admin/assets/pdf/AYURVEDA_AND_CONVENTIONAL_MEDICINE.pdf",
+    "category": "clinical_referral_and_safety",
+    "evidence_type": "government_guidance",
+    "local_path": "/kaggle/working/arogyanvesha/ayurvedic_knowledge/source_files/AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001.pdf"
+  },
+  {
+    "document_id": "WHO_AYURVEDA_PRACTICE_BENCHMARKS_001",
+    "source_id": "WHO_AYURVEDA",
+    "title": "WHO Benchmarks for the Practice of Ayurveda",
+    "url": "https://www.who.int/publications/i/item/9789240042674",
+    "category": "ayurveda_safety_and_practice",
+    "evidence_type": "international_guidance",
+    "local_path": "/kaggle/working/arogyanvesha/ayurvedic_knowledge/source_files/WHO_AYURVEDA_PRACTICE_BENCHMARKS_001.html"
+  }
+]

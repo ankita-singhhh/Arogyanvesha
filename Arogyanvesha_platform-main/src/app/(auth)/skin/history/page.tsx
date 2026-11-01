@@ -1,0 +1,13 @@
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { api } from "@/lib/api";
+import { formatDate } from "@/lib/utils";
+type Analysis = { id: string; analyzed_at: string; skin_type?: string | null; dominant_dosha?: string | null; score?: number | null; conditions?: unknown[] | null };
+export default function SkinHistoryPage() {
+ const [analyses,setAnalyses]=React.useState<Analysis[]>([]); const [loading,setLoading]=React.useState(true); const [error,setError]=React.useState<string|null>(null);
+ React.useEffect(()=>{let cancelled=false;api.get<Analysis[]>("/skin/analyses").then(({data})=>!cancelled&&setAnalyses(data??[])).catch(()=>!cancelled&&setError("Your saved skin analyses are temporarily unavailable.")).finally(()=>!cancelled&&setLoading(false));return()=>{cancelled=true};},[]);
+ return <PageContainer className="py-8"><div className="mx-auto max-w-2xl"><h1 className="text-h1 font-display font-bold text-text-heading">Skin Analysis History</h1><p className="mt-2 text-body text-text-muted">Saved analyses are informational only and do not diagnose a skin condition. Seek clinical care for concerning or persistent symptoms.</p>{loading?<p className="mt-8 text-text-muted">Loading your saved analyses…</p>:error?<p className="mt-8 text-status-error">{error}</p>:analyses.length===0?<div className="mt-8"><EmptyState variant="generic" title="No saved skin analyses" description="Completed skin analyses will appear here."/><Link href="/skin" className="mt-4 inline-block text-body-sm font-semibold text-brand-burgundy">Start an analysis →</Link></div>:<div className="mt-8 space-y-3">{analyses.map((analysis)=><Link href={`/skin/result/${analysis.id}`} key={analysis.id} className="block rounded-xl border border-border-default bg-surface-card p-4 transition hover:border-brand-gold"><div className="flex items-start justify-between gap-4"><div><h2 className="font-semibold text-text-heading">Analysis from {formatDate(analysis.analyzed_at)}</h2><p className="mt-1 text-body-sm text-text-muted">{[analysis.skin_type,analysis.dominant_dosha&&`${analysis.dominant_dosha} noted`].filter(Boolean).join(" · ")||"View saved analysis"}</p>{Array.isArray(analysis.conditions)&&analysis.conditions.length>0&&<p className="mt-1 text-label text-text-muted">{analysis.conditions.length} recorded observation{analysis.conditions.length===1?"":"s"}</p>}</div>{typeof analysis.score==="number"&&<span className="rounded-full bg-bg-subtle px-3 py-1 text-body-sm font-semibold text-text-heading">{analysis.score}/100</span>}</div></Link>)}</div>}</div></PageContainer>;
+}

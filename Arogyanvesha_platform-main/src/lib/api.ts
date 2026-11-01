@@ -1,0 +1,142 @@
+/**
+ * Arogyanvesha — Axios API Client
+ * Single instance used for ALL API calls.
+ * Never import axios directly anywhere else in the codebase.
+ */
+
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import type { AppError } from "@/types";
+
+type NormalizedAppError = AppError & {
+  endpoint?: string;
+  responseBody?: unknown;
+  errorType?: string;
+};
+
+/* ─────────────────────────────────────────────────────────
+   INSTANCE
+───────────────────────────────────────────────────────── */
+
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
+  timeout: 90000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+/* ─────────────────────────────────────────────────────────
+   REQUEST INTERCEPTOR
+   Attaches auth token from localStorage on every request.
+───────────────────────────────────────────────────────── */
+
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("arogya_access_token");
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error: AxiosError) => Promise.reject(error),
+);
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSE INTERCEPTOR
+   Normalises all errors into AppError shape.
+   Handles 401 — clears token and redirects to login.
+───────────────────────────────────────────────────────── */
+
+api.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<{ message?: string; code?: string; field?: string }>) => {
+    const status = error.response?.status;
+
+    // 401 — session expired
+    if (status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("arogya_access_token");
+      window.location.href = "/login?reason=session_expired";
+      return Promise.reject(error);
+    }
+
+    // Normalise to AppError
+    const appError: NormalizedAppError = {
+      code: error.response?.data?.code ?? "UNKNOWN_ERROR",
+      message:
+        error.response?.data?.message ??
+        error.message ??
+        "Something went wrong. Please try again.",
+      field: error.response?.data?.field ?? null,
+      statusCode: status,
+      endpoint: error.config?.url,
+      responseBody: error.response?.data,
+      errorType: "AxiosError",
+    };
+
+    return Promise.reject(appError);
+  },
+);
+
+/* ─────────────────────────────────────────────────────────
+   SWR FETCHER
+   Default fetcher for all useSWR calls.
+   Usage: useSWR("/endpoint", swrFetcher)
+───────────────────────────────────────────────────────── */
+
+export async function swrFetcher<T>(url: string): Promise<T> {
+  const response = await api.get<T>(url);
+  return response.data;
+}
+
+/* ─────────────────────────────────────────────────────────
+   SWR CACHE KEYS
+   Centralised — never hardcode endpoint strings in components.
+───────────────────────────────────────────────────────── */
+
+export const API_KEYS = {
+  // Auth
+  me:                "/auth/me",
+
+  // Prakriti
+  prakritiResult:    "/prakriti/result",
+  prakritiHistory:   "/prakriti/history",
+  prakritiQuestions: "/prakriti/questions",
+
+  // Chat
+  conversations:     "/chat/conversations",
+  conversation:      (id: string) => `/chat/conversations/${id}`,
+  messages:          (id: string) => `/chat/conversations/${id}/messages`,
+
+  // Yoga
+  yogaSessions:      "/yoga/sessions",
+  yogaSession:       (id: string) => `/yoga/sessions/${id}`,
+  yogaFavorites:     "/yoga/favorites",
+  yogaProgress:      "/yoga/progress",
+
+  // Skin
+  skinAnalyses:      "/skin/analyses",
+  skinAnalysis:      (id: string) => `/skin/analyses/${id}`,
+
+  // Wisdom
+  articles:          "/wisdom/articles",
+  article:           (slug: string) => `/wisdom/articles/${slug}`,
+
+  // Herbs
+  herbs:             "/herbs",
+  herb:              (slug: string) => `/herbs/${slug}`,
+
+  // Progress
+  healthScore:       "/progress/health-score",
+  activityFeed:      "/progress/activity",
+  streak:            "/progress/streak",
+
+  // Routine
+  routine:           "/routine",
+  routineLog:        "/routine/log",
+
+  // Notifications
+  notifications:     "/notifications",
+} as const;

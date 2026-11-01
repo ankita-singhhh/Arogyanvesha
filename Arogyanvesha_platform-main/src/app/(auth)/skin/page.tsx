@@ -1,0 +1,11 @@
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { api } from "@/lib/api";
+
+export default function SkinPage() {
+ const [history,setHistory]=React.useState<any[]>([]);const [loading,setLoading]=React.useState(true);const [error,setError]=React.useState<string|null>(null);
+ React.useEffect(()=>{let cancelled=false;api.get<any[]>("/skin/analyses").then(({data})=>!cancelled&&setHistory(data??[])).catch(()=>!cancelled&&setError("Skin history is temporarily unavailable.")).finally(()=>!cancelled&&setLoading(false));return()=>{cancelled=true};},[]);
+ return <PageContainer className="py-8"><div className="mx-auto max-w-4xl"><div className="flex items-start justify-between gap-4"><div><h1 className="text-h1 font-display font-bold text-text-heading">Skin Analysis</h1><p className="mt-1 text-body text-text-muted">AI-generated wellness observations are not a medical diagnosis. See a qualified clinician for concerning, painful, changing, or persistent skin symptoms.</p></div><Link href="/skin/capture" className="rounded-xl bg-brand-burgundy px-4 py-2 text-body-sm font-semibold text-white">New analysis</Link></div>{loading?<p className="mt-8 text-text-muted">Loading your analysis history…</p>:error?<p className="mt-8 text-status-error">{error}</p>:history.length===0?<section className="mt-8 rounded-2xl border border-border-default bg-surface-card p-6"><h2 className="text-h4 font-semibold text-text-heading">No skin analyses yet</h2><p className="mt-2 text-body-sm text-text-muted">Your saved analysis history will appear here after you complete an analysis.</p></section>:<div className="mt-8 space-y-3">{history.map((entry)=><Link href={`/skin/result/${entry.id}`} key={entry.id} className="block rounded-2xl border border-border-default bg-surface-card p-5 hover:border-brand-gold"><p className="text-label text-text-muted">{entry.analyzed_at ? new Date(entry.analyzed_at).toLocaleDateString("en-IN") : "Saved analysis"}</p><h2 className="mt-1 text-h4 font-semibold text-text-heading">{entry.skin_type ? `${entry.skin_type} skin analysis` : "Skin analysis"}</h2>{typeof entry.score === "number"&&<p className="mt-2 text-body-sm text-text-muted">Wellness score: {entry.score}/100</p>}</Link>)}</div>}</div></PageContainer>;
+}

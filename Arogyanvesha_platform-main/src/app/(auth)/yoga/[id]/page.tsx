@@ -1,0 +1,15 @@
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { api } from "@/lib/api";
+import type { YogaSession } from "@/types";
+
+export default function YogaSessionPage() {
+  const { id } = useParams<{ id: string }>(); const [session, setSession] = React.useState<YogaSession | null>(null); const [status, setStatus] = React.useState("Loading session…"); const [completionStatus, setCompletionStatus] = React.useState<string | null>(null);
+  React.useEffect(() => { if (!id) return; api.get<any>(`/yoga/sessions/${id}`).then(({ data }) => setSession({ id:data.id,title:data.title,description:data.description ?? "",durationMinutes:data.duration_minutes,level:data.level,category:data.category,thumbnailUrl:data.thumbnail_url,videoUrl:data.video_url,doshaTarget:data.dosha_target })).catch((error) => setStatus(error?.response?.status === 404 ? "This yoga session is no longer available." : "This yoga session is temporarily unavailable.")); }, [id]);
+  if (!session) return <PageContainer className="py-8"><p className="text-body text-text-muted">{status}</p><Link href="/yoga" className="mt-4 inline-block text-body-sm font-semibold text-brand-burgundy">Back to Yoga →</Link></PageContainer>;
+  const complete = async () => { try { await api.post(`/yoga/sessions/${session.id}/complete`, { durationActualMinutes: session.durationMinutes }); setCompletionStatus("Session recorded in your progress."); } catch { setCompletionStatus("Unable to record this session right now."); } };
+  return <PageContainer className="py-8"><article className="mx-auto max-w-3xl rounded-2xl border border-border-default bg-surface-card p-6 sm:p-8"><Link href="/yoga" className="text-body-sm font-semibold text-brand-burgundy">← All sessions</Link><p className="mt-6 text-label capitalize text-text-muted">{session.category} · {session.level} · {session.durationMinutes} min</p><h1 className="mt-2 text-h1 font-display font-bold text-text-heading">{session.title}</h1><p className="mt-5 whitespace-pre-line text-body leading-relaxed text-text-body">{session.description}</p>{session.videoUrl ? <a className="mt-6 inline-block rounded-xl bg-brand-burgundy px-5 py-3 text-body-sm font-semibold text-white" href={session.videoUrl} target="_blank" rel="noreferrer">Open practice video</a> : <p className="mt-6 text-body-sm text-text-muted">A practice video has not been added for this session yet.</p>}<button type="button" onClick={complete} className="mt-4 block rounded-xl border border-brand-burgundy px-5 py-3 text-body-sm font-semibold text-brand-burgundy">Mark session complete</button>{completionStatus&&<p className="mt-2 text-body-sm text-text-muted">{completionStatus}</p>}<p className="mt-8 border-t border-border-default pt-4 text-label text-text-muted">Yoga content is general wellness education and should be adapted or avoided if it causes pain or conflicts with clinical advice.</p></article></PageContainer>;
+}

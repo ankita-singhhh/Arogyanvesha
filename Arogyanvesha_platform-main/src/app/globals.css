@@ -1,0 +1,482 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Brand Core ── */
+  --color-brand-burgundy:         #682332;
+  --color-brand-burgundy-light:   #7D2B3E;
+  --color-brand-burgundy-deep:    #4A1520;
+  --color-brand-burgundy-hover:   #8B3045;
+  --color-brand-gold:             #D4AF37;
+  --color-brand-gold-light:       #E2C76B;
+  --color-brand-gold-pale:        #F5EDD3;
+  --color-brand-gold-muted:       #C9A84C;
+
+  /* ── Backgrounds ── */
+  --color-bg-base:      #FAF7F2;
+  --color-bg-canvas:    #F4EFE7;
+  --color-bg-subtle:    #EDE8DE;
+  --color-bg-inverted:  #682332;
+  --color-bg-brand:     #4A1520;
+
+  /* ── Surfaces ── */
+  --color-surface-card:     #FFFFFF;
+  --color-surface-elevated: #FAF7F2;
+  --color-surface-glass:    rgba(255,255,255,0.85);
+  --color-surface-sage:     #EFF4F0;
+  --color-surface-gold:     #FBF6E9;
+  --color-surface-warm:     #FDF9F4;
+
+  /* ── Text Hierarchy ── */
+  --color-text-primary:  #1A1208;
+  --color-text-heading:  #2D2418;
+  --color-text-body:     #4A4035;
+  --color-text-muted:    #7A6E64;
+  --color-text-disabled: #B0A89E;
+  --color-text-inverted: #FFFFFF;
+  --color-text-brand:    #682332;
+  --color-text-gold:     #D4AF37;
+  --color-text-sanskrit: #D4AF37;
+
+  /* ── Borders ── */
+  --color-border-default: #E8E0D0;
+  --color-border-strong:  #D4C8B0;
+  --color-border-brand:   #682332;
+  --color-border-gold:    #D4AF37;
+  --color-border-sage:    #7E9A83;
+
+  /* ── Support Colors ── */
+  --color-sage:           #7E9A83;
+  --color-sage-light:     #A8C4AD;
+  --color-sage-bg:        #EFF4F0;
+  --color-olive:          #8B9E6E;
+  --color-olive-bg:       #F0F3EA;
+  --color-warm-brown:     #8B7355;
+  --color-warm-brown-bg:  #F3EDE4;
+  --color-charcoal:       #2D2A26;
+
+  /* ── Status ── */
+  --color-status-success:    #3D7A5C;
+  --color-status-warning:    #C47A1A;
+  --color-status-error:      #B02020;
+  --color-status-info:       #2A5A8A;
+  --color-status-success-bg: #EBF5EE;
+  --color-status-warning-bg: #FEF3CD;
+  --color-status-error-bg:   #FDE8E8;
+  --color-status-info-bg:    #EBF5FB;
+
+  /* ── Dosha Colors ── */
+  --color-dosha-vata:     #6B4FA0;
+  --color-dosha-pitta:    #C45C1A;
+  --color-dosha-kapha:    #3D7A5C;
+  --color-dosha-vata-bg:  #EDE8F7;
+  --color-dosha-pitta-bg: #FBF0E8;
+  --color-dosha-kapha-bg: #EBF5EE;
+
+  /* ── Typography ── */
+  --font-display: "Playfair Display", "Georgia", serif;
+  --font-body:    "Inter", "system-ui", sans-serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", monospace;
+
+  /* ── Spacing ── */
+  --spacing-1:  4px;
+  --spacing-2:  8px;
+  --spacing-3:  12px;
+  --spacing-4:  16px;
+  --spacing-5:  20px;
+  --spacing-6:  24px;
+  --spacing-8:  32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* ── Border Radius ── */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-3xl:  48px;
+  --radius-pill: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-xs:         0 1px 3px rgba(104,35,50,0.06);
+  --shadow-sm:         0 2px 8px rgba(104,35,50,0.08);
+  --shadow-md:         0 4px 20px rgba(104,35,50,0.10), 0 1px 4px rgba(104,35,50,0.06);
+  --shadow-lg:         0 8px 40px rgba(104,35,50,0.12), 0 2px 8px rgba(104,35,50,0.08);
+  --shadow-xl:         0 20px 60px rgba(104,35,50,0.16), 0 4px 12px rgba(104,35,50,0.08);
+  --shadow-gold:       0 4px 24px rgba(212,175,55,0.35);
+  --shadow-burgundy:   0 4px 24px rgba(104,35,50,0.30);
+  --shadow-card:       0 2px 16px rgba(45,36,24,0.08), 0 1px 4px rgba(45,36,24,0.04);
+  --shadow-card-hover: 0 8px 40px rgba(45,36,24,0.14), 0 2px 8px rgba(45,36,24,0.08);
+
+  /* ── Animation ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --duration-slow:   400ms;
+  --duration-slower: 600ms;
+}
+
+:root {
+  /* ── Type Scale ── */
+  --text-display-xl: clamp(52px, 6vw, 88px);
+  --text-display:    clamp(40px, 4.5vw, 68px);
+  --text-h1:         clamp(32px, 3.5vw, 52px);
+  --text-h2:         clamp(24px, 2.8vw, 40px);
+  --text-h3:         clamp(20px, 2.2vw, 28px);
+  --text-h4:         clamp(16px, 1.6vw, 22px);
+  --text-body-xl:    20px;
+  --text-body-lg:    18px;
+  --text-body:       16px;
+  --text-body-sm:    14px;
+  --text-label:      12px;
+  --text-micro:      11px;
+  --text-mono:       14px;
+
+  /* ── Line Heights ── */
+  --leading-tight:   1.15;
+  --leading-snug:    1.3;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.75;
+  --leading-reading: 1.85;
+
+  /* ── Glassmorphism ── */
+  --glass-bg:     rgba(255, 252, 248, 0.88);
+  --glass-border: rgba(212, 175, 55, 0.20);
+  --glass-blur:   blur(24px);
+
+  /* ── Layout ── */
+  --sidebar-width-expanded:  260px;
+  --sidebar-width-collapsed: 72px;
+  --topnav-height:           68px;
+  --bottom-tabbar-height:    64px;
+  --page-max-width:          1320px;
+  --reading-max-width:       720px;
+  --modal-max-width:         640px;
+
+  /* ── Sidebar Styles ── */
+  --sidebar-bg: linear-gradient(180deg, #FFFDF8 0%, #FCF7EE 40%, #F8F2E5 100%);
+  --sidebar-border: #E9DEC9;
+  --sidebar-group-label: #B09A74;
+  --sidebar-text-active: #7A3E2C;
+  --sidebar-text-inactive: #6B6155;
+  --sidebar-active-bg: linear-gradient(90deg, rgba(151,72,53,0.11) 0%, rgba(190,145,74,0.07) 100%);
+  --sidebar-hover-bg: rgba(233, 222, 201, 0.5);
+  --sidebar-hover-text: #5B3924;
+  --sidebar-user-bg: rgba(233, 222, 201, 0.35);
+  --sidebar-user-border: rgba(233, 222, 201, 0.6);
+  --sidebar-user-hover-bg: rgba(233, 222, 201, 0.6);
+  --sidebar-logout-bg: rgba(122, 62, 44, 0.05);
+  --sidebar-logout-border: rgba(122, 62, 44, 0.15);
+  --sidebar-logout-hover-bg: rgba(122, 62, 44, 0.1);
+  --sidebar-logout-color: #7A3E2C;
+}
+
+/* ── Dark mode ── */
+.dark {
+  --color-bg-base:          #0F1209;
+  --color-bg-canvas:        #151A0F;
+  --color-bg-subtle:        #1A2214;
+  --color-surface-card:     #1E2A18;
+  --color-surface-elevated: #243520;
+  --color-text-primary:     #F5F2EC;
+  --color-text-heading:     #E8E4DA;
+  --color-text-body:        #B8C4B0;
+  --color-text-muted:       #8A9880;
+  --color-border-default:   #2A3D2C;
+  --color-border-strong:    #3A5040;
+  --glass-bg:               rgba(14, 20, 10, 0.92);
+
+  /* ── Sidebar Dark Mode Overrides ── */
+  --sidebar-bg: linear-gradient(180deg, #151A0F 0%, #0F1209 100%);
+  --sidebar-border: #2A3D2C;
+  --sidebar-group-label: #A2B095;
+  --sidebar-text-active: #E49380;
+  --sidebar-text-inactive: #8A9880;
+  --sidebar-active-bg: linear-gradient(90deg, rgba(228,147,128,0.18) 0%, rgba(212,175,55,0.08) 100%);
+  --sidebar-hover-bg: rgba(42, 61, 44, 0.45);
+  --sidebar-hover-text: #F5F2EC;
+  --sidebar-user-bg: rgba(42, 61, 44, 0.35);
+  --sidebar-user-border: rgba(42, 61, 44, 0.6);
+  --sidebar-user-hover-bg: rgba(42, 61, 44, 0.65);
+  --sidebar-logout-bg: rgba(228, 147, 128, 0.1);
+  --sidebar-logout-border: rgba(228, 147, 128, 0.25);
+  --sidebar-logout-hover-bg: rgba(228, 147, 128, 0.2);
+  --sidebar-logout-color: #E49380;
+
+  /* ── Status & Pale Badge Dark Mode Overrides ── */
+  --color-brand-gold-pale:    rgba(212, 175, 55, 0.15);
+  --color-status-success-bg:  rgba(61, 122, 92, 0.15);
+  --color-status-warning-bg:  rgba(196, 122, 26, 0.15);
+  --color-status-error-bg:    rgba(176, 32, 32, 0.15);
+  --color-status-info-bg:     rgba(42, 90, 138, 0.15);
+
+  /* ── Status Vibrant Text Dark Mode Overrides ── */
+  --color-status-success:     #4EAF76;
+  --color-status-warning:     #E2A546;
+  --color-status-error:       #E45B5B;
+  --color-status-info:        #5CA2E6;
+
+  /* ── Dosha Colors Dark Mode Overrides ── */
+  --color-dosha-vata:         #9F8BCA;
+  --color-dosha-pitta:        #EAA26B;
+  --color-dosha-kapha:        #5CB28A;
+  --color-dosha-vata-bg:      rgba(107, 79, 160, 0.15);
+  --color-dosha-pitta-bg:     rgba(196, 92, 26, 0.15);
+  --color-dosha-kapha-bg:     rgba(61, 122, 92, 0.15);
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /*
+      FIX: scroll-behavior removed from bare `html {}` selector.
+      It is now scoped to html[data-scroll-behavior="smooth"] below.
+
+      WHY: Next.js 16 detects scroll-behavior: smooth on <html> and
+      warns with "missing-data-scroll-behavior". The framework needs to
+      temporarily override scroll position during client-side route
+      transitions; a global smooth scroll setting fights that.
+
+      The attribute is set on <html> in layout.tsx, so all in-page
+      anchor links (#features, #pricing, etc.) still scroll smoothly.
+      Next.js strips the attribute during transitions, then restores it.
+    */
+  }
+
+  /* Scoped smooth scroll — only active when Next.js hasn't removed the attribute */
+  html[data-scroll-behavior="smooth"] {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-base);
+    color: var(--color-text-body);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    color: var(--color-text-heading);
+    line-height: var(--leading-tight);
+    font-weight: 700;
+  }
+
+  h4, h5, h6 {
+    font-family: var(--font-body);
+    color: var(--color-text-heading);
+    line-height: var(--leading-snug);
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--color-text-brand);
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-border-gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  :focus:not(:focus-visible) { outline: none; }
+
+  img, video { max-width: 100%; height: auto; display: block; }
+
+  ::selection {
+    background-color: var(--color-brand-gold-pale);
+    color: var(--color-text-primary);
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg-subtle); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes dosha-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-6px); }
+}
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(2deg); }
+  66%       { transform: translateY(-6px) rotate(-1deg); }
+}
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(-2deg); }
+  66%       { transform: translateY(-14px) rotate(1deg); }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.05); }
+}
+
+@layer utilities {
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--spacing-4);
+    z-index: 9999;
+    padding: var(--spacing-3) var(--spacing-6);
+    background-color: var(--color-brand-burgundy);
+    color: var(--color-text-inverted);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: top var(--duration-fast) var(--ease-out-expo);
+  }
+  .skip-link:focus { top: var(--spacing-4); }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--color-border-default) 25%,
+      var(--color-bg-subtle) 50%,
+      var(--color-border-default) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1600ms ease-in-out infinite;
+  }
+
+  .dosha-dot-vata  { animation: dosha-bounce 1800ms ease-in-out infinite 0ms; }
+  .dosha-dot-pitta { animation: dosha-bounce 1800ms ease-in-out infinite 600ms; }
+  .dosha-dot-kapha { animation: dosha-bounce 1800ms ease-in-out infinite 1200ms; }
+
+  .streaming-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: var(--color-brand-gold);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cursor-blink 400ms step-end infinite;
+  }
+
+  .shake { animation: shake 200ms var(--ease-out-expo) forwards; }
+
+  .float         { animation: float          6s ease-in-out infinite; }
+  .float-delayed { animation: float-delayed  8s ease-in-out infinite; }
+  .pulse-glow    { animation: pulse-glow     3s ease-in-out infinite; }
+
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-color: var(--glass-border);
+  }
+
+  .sanskrit {
+    font-family: var(--font-mono);
+    color: var(--color-text-sanskrit);
+    font-size: var(--text-mono);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #F0D060 50%, #C9A84C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-burgundy {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-burgundy) 0%,
+      var(--color-brand-burgundy-light) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-hero {
+    background: linear-gradient(135deg, #FAF7F2 0%, #F4EFE7 50%, #EDE8DE 100%);
+  }
+
+  .bg-gradient-card {
+    background: linear-gradient(145deg, #FFFFFF 0%, #FAF7F2 100%);
+  }
+
+  .bg-gradient-burgundy {
+    background: linear-gradient(135deg, #682332 0%, #4A1520 100%);
+  }
+
+  .bg-gradient-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #C9A84C 100%);
+  }
+
+  .card-premium {
+    background: linear-gradient(145deg, #FFFFFF 0%, #FAF7F2 100%);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .card-premium:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .truncate-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .truncate-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .pb-safe   { padding-bottom: env(safe-area-inset-bottom); }
+  .pb-tabbar { padding-bottom: calc(var(--bottom-tabbar-height) + env(safe-area-inset-bottom)); }
+}

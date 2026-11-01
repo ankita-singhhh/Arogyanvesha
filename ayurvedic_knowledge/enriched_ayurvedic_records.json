@@ -1,0 +1,484 @@
+[
+  {
+    "condition": "acne",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies acne among chronic skin conditions for which Ayurveda may be considered as an additional treatment approach.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Use Prakriti only as a personalization layer for traditional lifestyle guidance.",
+      "Do not use Prakriti to determine a medical diagnosis."
+    ],
+    "food_guidance": [
+      "Prefer a balanced diet with adequate fruits, vegetables, whole grains and protein.",
+      "Avoid presenting any single food as a proven Ayurvedic cure for acne.",
+      "Individual food triggers should be tracked rather than assumed."
+    ],
+    "lifestyle_guidance": [
+      "Maintain regular sleep and daily hygiene.",
+      "Avoid repeatedly touching, squeezing or picking acne lesions.",
+      "Track possible personal triggers and changes in symptoms."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga or relaxation practices may be used as general wellness support.",
+      "Yoga should not replace dermatological assessment when acne is severe, infected or worsening."
+    ],
+    "traditional_options": [
+      "Ayurvedic supportive care may be considered with a qualified Ayurvedic practitioner.",
+      "Do not recommend a specific oral formulation or dosage without an appropriate clinical source."
+    ],
+    "precautions": [
+      "Do not interpret this source as evidence that Ayurveda alone cures acne.",
+      "Severe skin disease or disease not responding to Ayurvedic treatment requires appropriate referral."
+    ],
+    "warning_signs": [
+      "Severe skin infection",
+      "Rapidly worsening skin condition",
+      "Condition not responding to treatment"
+    ],
+    "when_to_seek_care": "Seek appropriate medical evaluation for severe, progressive, infected, or treatment-resistant skin disease.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "The AYUSH/CCRAS cross-referral material identifies acne as a chronic skin condition that may be considered for Ayurveda as an additional/supportive approach. This does not establish Ayurveda as a proven cure for acne.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "anxiety",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies mild-to-moderate anxiety disorder as a situation where Ayurveda may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti information may personalize general lifestyle suggestions.",
+      "Prakriti should not determine psychiatric diagnosis or treatment."
+    ],
+    "food_guidance": [
+      "Prefer regular, balanced meals and adequate hydration.",
+      "Avoid claiming that a particular food or herb treats an anxiety disorder."
+    ],
+    "lifestyle_guidance": [
+      "Maintain a regular sleep-wake schedule.",
+      "Use relaxation, breathing or mindfulness practices as supportive wellness measures.",
+      "Encourage appropriate social and professional support when symptoms interfere with daily life."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga, breathing practices and meditation may be used as complementary practices.",
+      "Research suggests yoga may help anxiety symptoms, but evidence for diagnosed anxiety disorders is not conclusive."
+    ],
+    "traditional_options": [
+      "Traditional Ayurvedic care may be considered as complementary support under qualified supervision.",
+      "Do not recommend stopping prescribed psychiatric treatment in favor of Ayurveda."
+    ],
+    "precautions": [
+      "Ayurvedic care should not replace urgent psychiatric care for severe illness.",
+      "The source describes Ayurveda management within a cross-referral framework rather than as a universal cure."
+    ],
+    "warning_signs": [
+      "Suicidal or self-injurious behavior",
+      "Severe anxiety disorder",
+      "Psychotic symptoms",
+      "Treatment-resistant illness",
+      "Need for specialized psychiatric treatment"
+    ],
+    "when_to_seek_care": "Urgent professional mental-health assessment is required for suicidal behavior, psychosis, severe symptoms, or other serious psychiatric warning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "NCCIH reports promising but insufficient evidence to conclude that yoga is effective for diagnosed anxiety disorders. AYUSH/CCRAS material allows consideration of Ayurveda for selected mild-to-moderate cases, while severe cases require appropriate medical/mental-health care.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "asthma",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes mild-to-moderate asthma without complications or a serious underlying cause among respiratory conditions that may be referred to Ayurveda.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti can personalize general wellness suggestions only.",
+      "It must not be used to assess asthma severity."
+    ],
+    "food_guidance": [
+      "Use a balanced diet appropriate to the person's overall health.",
+      "Do not recommend food or herbal products as substitutes for prescribed asthma medication."
+    ],
+    "lifestyle_guidance": [
+      "Identify and avoid known personal asthma triggers where possible.",
+      "Follow the person's prescribed asthma action plan.",
+      "Monitor changes in breathing symptoms."
+    ],
+    "yoga_guidance": [
+      "Only gentle, comfortable breathing and yoga practices should be considered.",
+      "Avoid forceful breathing practices when they trigger symptoms.",
+      "Yoga must not replace inhalers or emergency asthma treatment."
+    ],
+    "traditional_options": [
+      "Ayurvedic supportive care may be considered only alongside appropriate asthma management.",
+      "No Ayurvedic medicine or dosage should be automatically recommended by the RAG."
+    ],
+    "precautions": [
+      "Asthma can become an emergency.",
+      "Ayurvedic guidance must not replace prescribed emergency or controller treatment."
+    ],
+    "warning_signs": [
+      "Severe breathing difficulty",
+      "Rapidly worsening respiratory symptoms",
+      "Signs of respiratory distress",
+      "Serious underlying respiratory disease"
+    ],
+    "when_to_seek_care": "Emergency medical care is required for severe or rapidly worsening breathing problems.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "AYUSH/CCRAS materials identify asthma among respiratory conditions addressed within Ayurveda, while severe or emergency respiratory presentations require medical care. Ayurveda should therefore be presented as complementary rather than a replacement for established asthma treatment.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "acute bronchitis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes common cases of acute bronchitis without complications or serious underlying causes among respiratory conditions that may be referred to Ayurveda.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general lifestyle suggestions but does not determine infection severity."
+    ],
+    "food_guidance": [
+      "Maintain adequate fluids and a balanced diet according to tolerance.",
+      "Do not claim that a specific food cures acute bronchitis."
+    ],
+    "lifestyle_guidance": [
+      "Rest according to symptoms and maintain hydration.",
+      "Avoid smoke and other respiratory irritants.",
+      "Monitor symptoms for worsening or persistence."
+    ],
+    "yoga_guidance": [
+      "Avoid strenuous yoga during an acute respiratory illness.",
+      "Gentle relaxation may be considered when comfortable."
+    ],
+    "traditional_options": [
+      "Traditional Ayurvedic supportive care may be discussed with a qualified practitioner.",
+      "Do not use traditional remedies as a substitute for assessment when symptoms are severe."
+    ],
+    "precautions": [
+      "Do not assume every cough or bronchitis-like illness is suitable for Ayurvedic management.",
+      "Serious underlying respiratory disease requires appropriate medical assessment."
+    ],
+    "warning_signs": [
+      "Breathlessness",
+      "Severe respiratory symptoms",
+      "High or persistent fever",
+      "Signs of serious underlying disease"
+    ],
+    "when_to_seek_care": "Seek medical evaluation when respiratory symptoms are severe, worsening, or associated with concerning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "AYUSH/CCRAS cross-referral material identifies uncomplicated acute bronchitis among respiratory conditions that may be considered for Ayurveda, while serious or complicated respiratory illness requires medical evaluation.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "depression",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies mild-to-moderate depression as a situation where Ayurveda may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general lifestyle suggestions only.",
+      "It must never be used to assess suicide risk or psychiatric severity."
+    ],
+    "food_guidance": [
+      "Encourage regular balanced meals and adequate hydration.",
+      "Do not describe a particular food or herb as a treatment for depression."
+    ],
+    "lifestyle_guidance": [
+      "Maintain regular sleep and daily routine where possible.",
+      "Encourage appropriate physical activity according to individual ability.",
+      "Encourage social connection and professional mental-health support."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga, relaxation and mindfulness may be used as complementary practices.",
+      "NCCIH reports that yoga may provide small additional benefits when used with other treatment."
+    ],
+    "traditional_options": [
+      "Ayurvedic approaches may be considered as complementary support under qualified supervision.",
+      "Do not recommend replacing prescribed antidepressant or psychiatric treatment."
+    ],
+    "precautions": [
+      "Ayurveda should not replace urgent psychiatric treatment for severe depression.",
+      "The source supports a cross-referral/add-on framework."
+    ],
+    "warning_signs": [
+      "Suicidal tendency",
+      "Self-injurious behavior",
+      "Severe mood disorder",
+      "Psychotic symptoms",
+      "Depression not responding to treatment"
+    ],
+    "when_to_seek_care": "Urgent professional mental-health care is required when there is suicidal behavior, psychosis, severe deterioration, or other serious psychiatric symptoms.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "NCCIH reports some evidence that yoga may help depressive symptoms and may provide small additional benefits alongside other treatment. AYUSH/CCRAS material distinguishes mild-to-moderate cases from severe presentations requiring appropriate medical care.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "eczema",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes eczema among chronic skin conditions where Ayurveda may be considered as an add-on approach.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general lifestyle guidance.",
+      "It should not be used to determine the medical cause of a skin lesion."
+    ],
+    "food_guidance": [
+      "Use a balanced diet unless a clinician has identified a specific food allergy or intolerance.",
+      "Do not automatically recommend restrictive elimination diets."
+    ],
+    "lifestyle_guidance": [
+      "Maintain regular skin-care practices appropriate to the individual's condition.",
+      "Avoid known personal irritants or triggers.",
+      "Monitor changes in skin inflammation, infection or rapid worsening."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga may be used for general stress and wellness support.",
+      "Yoga does not replace dermatological treatment."
+    ],
+    "traditional_options": [
+      "AYUSH/CCRAS material identifies eczema among chronic skin conditions that may be considered for additional Ayurvedic care.",
+      "Specific herbal or topical formulations should only be recommended from an appropriate clinical source."
+    ],
+    "precautions": [
+      "Severe skin infections and serious skin disease require appropriate medical evaluation.",
+      "Do not interpret cross-referral guidance as proof of cure."
+    ],
+    "warning_signs": [
+      "Severe skin infection",
+      "Rapid worsening",
+      "Extensive or serious skin disease",
+      "Failure to respond to treatment"
+    ],
+    "when_to_seek_care": "Seek medical evaluation for severe, infected, rapidly worsening, or treatment-resistant eczema.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "AYUSH/CCRAS cross-referral material identifies eczema as a chronic skin condition that may be considered for additional Ayurveda. Severe skin infections and patients not responding to treatment require appropriate medical evaluation.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "gastritis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes chronic and recurrent gastritis among gastrointestinal conditions for which Ayurveda management may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general dietary and lifestyle suggestions.",
+      "It must not be used to determine the underlying cause of abdominal symptoms."
+    ],
+    "food_guidance": [
+      "Prefer meals that are tolerated well by the individual.",
+      "Avoid automatically assigning a universal Ayurvedic diet to every person.",
+      "Track foods or beverages that consistently worsen symptoms."
+    ],
+    "lifestyle_guidance": [
+      "Maintain regular meal timing where practical.",
+      "Avoid known personal gastrointestinal triggers.",
+      "Seek evaluation when symptoms are persistent, recurrent or worsening."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga and relaxation may be considered when symptoms permit.",
+      "Avoid strenuous practices during significant abdominal symptoms."
+    ],
+    "traditional_options": [
+      "Ayurvedic management may be considered for selected chronic or recurrent gastrointestinal conditions under qualified supervision.",
+      "No formulation or dosage should be generated automatically."
+    ],
+    "precautions": [
+      "Complicated gastrointestinal disease requires medical care.",
+      "Do not assume persistent abdominal symptoms are simple gastritis."
+    ],
+    "warning_signs": [
+      "Severe abdominal pain",
+      "Persistent vomiting",
+      "Gastrointestinal bleeding",
+      "Progressive weight loss",
+      "Signs of obstruction or shock"
+    ],
+    "when_to_seek_care": "Seek medical evaluation for bleeding, severe pain, persistent vomiting, weight loss, or other serious gastrointestinal warning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "AYUSH/CCRAS material identifies chronic/recurrent gastritis among gastrointestinal conditions that may be considered for Ayurvedic management, while complicated GI presentations require appropriate medical assessment.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "migraine",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document lists headache and migraine among neurological conditions that may be considered for Ayurveda after appropriate assessment.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general lifestyle recommendations.",
+      "It should not be used to determine whether a headache is a migraine."
+    ],
+    "food_guidance": [
+      "Maintain regular meals and adequate hydration.",
+      "Track individual migraine triggers rather than assuming universal food triggers."
+    ],
+    "lifestyle_guidance": [
+      "Maintain consistent sleep and daily routines where possible.",
+      "Identify personal environmental or lifestyle triggers.",
+      "Keep a symptom/headache diary to identify recurring patterns."
+    ],
+    "yoga_guidance": [
+      "Gentle yoga and relaxation practices may be considered as complementary support.",
+      "NCCIH reports promising but not conclusive evidence for yoga in migraine."
+    ],
+    "traditional_options": [
+      "CCRAS has published Ayurvedic management material that includes migraine.",
+      "Specific Ayurvedic medicines or dosages should not be generated without a qualified clinical source."
+    ],
+    "precautions": [
+      "A new or unusually severe headache requires appropriate medical assessment.",
+      "Ayurvedic guidance should not delay emergency evaluation."
+    ],
+    "warning_signs": [
+      "Sudden severe headache",
+      "Headache after head injury",
+      "New neurological deficit",
+      "Altered consciousness",
+      "Suspected stroke or intracranial disease"
+    ],
+    "when_to_seek_care": "Urgent medical assessment is appropriate for sudden severe headache, neurological deficits, altered consciousness, head injury, or other serious neurological signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "CCRAS publishes Ayurvedic management protocols that include migraine. NCCIH reports that research on yoga for migraine is promising but limited and not conclusive.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  },
+  {
+    "condition": "osteoarthritis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies osteoarthritis among joint disorders that may be managed through Ayurveda within its cross-referral framework. It also describes Ayurvedic research and integrative treatment protocols for osteoarthritis.",
+    "dosha_context": {},
+    "prakriti_considerations": [
+      "Prakriti may personalize general lifestyle guidance.",
+      "It should not determine the severity or structural cause of joint disease."
+    ],
+    "food_guidance": [
+      "Use a balanced diet appropriate to the individual's nutritional needs.",
+      "Avoid presenting a particular food or herb as a guaranteed treatment."
+    ],
+    "lifestyle_guidance": [
+      "Maintain appropriate physical activity according to ability.",
+      "Use joint-friendly movement and avoid activities that clearly aggravate symptoms.",
+      "Seek professional assessment when pain, swelling or function deteriorates."
+    ],
+    "yoga_guidance": [
+      "Gentle, appropriately modified yoga may support mobility and function.",
+      "NCCIH reports possible benefits of yoga for knee osteoarthritis, although evidence quality is limited."
+    ],
+    "traditional_options": [
+      "CCRAS identifies osteoarthritis among conditions addressed in Ayurvedic research and management material.",
+      "Specific formulations, therapies and dosages should require qualified practitioner oversight."
+    ],
+    "precautions": [
+      "Severe pain, trauma, deformity, or rapidly worsening joint symptoms require medical assessment.",
+      "Do not interpret the source as establishing Ayurveda as a replacement for all conventional treatment."
+    ],
+    "warning_signs": [
+      "Severe or rapidly worsening joint pain",
+      "Major trauma",
+      "Marked joint deformity",
+      "Loss of function requiring urgent assessment"
+    ],
+    "when_to_seek_care": "Seek appropriate medical assessment for severe, rapidly worsening, traumatic, or function-threatening joint symptoms.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ],
+    "evidence": "NCCIH notes that a few studies suggest some Ayurvedic preparations may reduce pain and improve function in osteoarthritis, but many trials are small or have design limitations. Therefore the system must present this as limited evidence rather than established efficacy.",
+    "rag_safety": {
+      "diagnosis_policy": "Model predictions are candidate conditions only and are not a diagnosis.",
+      "treatment_policy": "RAG provides source-grounded Ayurvedic supportive information. It must not prescribe individualized treatment or dosage.",
+      "evidence_policy": "Traditional Ayurvedic claims and modern scientific evidence must be presented separately.",
+      "medicine_policy": "Do not generate medicine names, formulations or dosages unless they are explicitly supported by an approved source record and appropriate clinical context.",
+      "referral_policy": "Warning signs and serious presentations must trigger medical-care recommendations rather than Ayurvedic self-treatment.",
+      "prakriti_policy": "Prakriti is a personalization layer and is not a diagnostic model."
+    }
+  }
+]

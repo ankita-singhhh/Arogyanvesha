@@ -1,0 +1,257 @@
+[
+  {
+    "condition": "acne",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies acne among chronic skin conditions for which Ayurveda may be considered as an additional treatment approach.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Do not interpret this source as evidence that Ayurveda alone cures acne.",
+      "Severe skin disease or disease not responding to Ayurvedic treatment requires appropriate referral."
+    ],
+    "warning_signs": [
+      "Severe skin infection",
+      "Rapidly worsening skin condition",
+      "Condition not responding to treatment"
+    ],
+    "when_to_seek_care": "Seek appropriate medical evaluation for severe, progressive, infected, or treatment-resistant skin disease.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "anxiety",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies mild-to-moderate anxiety disorder as a situation where Ayurveda may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Ayurvedic care should not replace urgent psychiatric care for severe illness.",
+      "The source describes Ayurveda management within a cross-referral framework rather than as a universal cure."
+    ],
+    "warning_signs": [
+      "Suicidal or self-injurious behavior",
+      "Severe anxiety disorder",
+      "Psychotic symptoms",
+      "Treatment-resistant illness",
+      "Need for specialized psychiatric treatment"
+    ],
+    "when_to_seek_care": "Urgent professional mental-health assessment is required for suicidal behavior, psychosis, severe symptoms, or other serious psychiatric warning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "asthma",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes mild-to-moderate asthma without complications or a serious underlying cause among respiratory conditions that may be referred to Ayurveda.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Asthma can become an emergency.",
+      "Ayurvedic guidance must not replace prescribed emergency or controller treatment."
+    ],
+    "warning_signs": [
+      "Severe breathing difficulty",
+      "Rapidly worsening respiratory symptoms",
+      "Signs of respiratory distress",
+      "Serious underlying respiratory disease"
+    ],
+    "when_to_seek_care": "Emergency medical care is required for severe or rapidly worsening breathing problems.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "acute bronchitis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes common cases of acute bronchitis without complications or serious underlying causes among respiratory conditions that may be referred to Ayurveda.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Do not assume every cough or bronchitis-like illness is suitable for Ayurvedic management.",
+      "Serious underlying respiratory disease requires appropriate medical assessment."
+    ],
+    "warning_signs": [
+      "Breathlessness",
+      "Severe respiratory symptoms",
+      "High or persistent fever",
+      "Signs of serious underlying disease"
+    ],
+    "when_to_seek_care": "Seek medical evaluation when respiratory symptoms are severe, worsening, or associated with concerning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "depression",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies mild-to-moderate depression as a situation where Ayurveda may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Ayurveda should not replace urgent psychiatric treatment for severe depression.",
+      "The source supports a cross-referral/add-on framework."
+    ],
+    "warning_signs": [
+      "Suicidal tendency",
+      "Self-injurious behavior",
+      "Severe mood disorder",
+      "Psychotic symptoms",
+      "Depression not responding to treatment"
+    ],
+    "when_to_seek_care": "Urgent professional mental-health care is required when there is suicidal behavior, psychosis, severe deterioration, or other serious psychiatric symptoms.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "eczema",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes eczema among chronic skin conditions where Ayurveda may be considered as an add-on approach.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Severe skin infections and serious skin disease require appropriate medical evaluation.",
+      "Do not interpret cross-referral guidance as proof of cure."
+    ],
+    "warning_signs": [
+      "Severe skin infection",
+      "Rapid worsening",
+      "Extensive or serious skin disease",
+      "Failure to respond to treatment"
+    ],
+    "when_to_seek_care": "Seek medical evaluation for severe, infected, rapidly worsening, or treatment-resistant eczema.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "gastritis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document includes chronic and recurrent gastritis among gastrointestinal conditions for which Ayurveda management may be considered.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Complicated gastrointestinal disease requires medical care.",
+      "Do not assume persistent abdominal symptoms are simple gastritis."
+    ],
+    "warning_signs": [
+      "Severe abdominal pain",
+      "Persistent vomiting",
+      "Gastrointestinal bleeding",
+      "Progressive weight loss",
+      "Signs of obstruction or shock"
+    ],
+    "when_to_seek_care": "Seek medical evaluation for bleeding, severe pain, persistent vomiting, weight loss, or other serious gastrointestinal warning signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "migraine",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document lists headache and migraine among neurological conditions that may be considered for Ayurveda after appropriate assessment.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "A new or unusually severe headache requires appropriate medical assessment.",
+      "Ayurvedic guidance should not delay emergency evaluation."
+    ],
+    "warning_signs": [
+      "Sudden severe headache",
+      "Headache after head injury",
+      "New neurological deficit",
+      "Altered consciousness",
+      "Suspected stroke or intracranial disease"
+    ],
+    "when_to_seek_care": "Urgent medical assessment is appropriate for sudden severe headache, neurological deficits, altered consciousness, head injury, or other serious neurological signs.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  },
+  {
+    "condition": "osteoarthritis",
+    "symptoms": [],
+    "ayurvedic_perspective": "The AYUSH cross-referral document identifies osteoarthritis among joint disorders that may be managed through Ayurveda within its cross-referral framework. It also describes Ayurvedic research and integrative treatment protocols for osteoarthritis.",
+    "dosha_context": {},
+    "prakriti_considerations": {},
+    "food_guidance": [],
+    "lifestyle_guidance": [],
+    "yoga_guidance": [],
+    "traditional_options": [],
+    "precautions": [
+      "Severe pain, trauma, deformity, or rapidly worsening joint symptoms require medical assessment.",
+      "Do not interpret the source as establishing Ayurveda as a replacement for all conventional treatment."
+    ],
+    "warning_signs": [
+      "Severe or rapidly worsening joint pain",
+      "Major trauma",
+      "Marked joint deformity",
+      "Loss of function requiring urgent assessment"
+    ],
+    "when_to_seek_care": "Seek appropriate medical assessment for severe, rapidly worsening, traumatic, or function-threatening joint symptoms.",
+    "sources": [
+      {
+        "document_id": "AYUSH_AYURVEDA_CONVENTIONAL_REFERRAL_001",
+        "source_type": "government_guidance"
+      }
+    ]
+  }
+]
