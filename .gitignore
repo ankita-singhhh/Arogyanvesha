@@ -8,7 +8,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
-
+# Trained models
+model/*.joblib
+model/*.pkl
 # Build outputs
 .next/
 out/
