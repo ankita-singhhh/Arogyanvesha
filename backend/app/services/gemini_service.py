@@ -1,7 +1,7 @@
 import json
 import re
 import time
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -11,11 +11,105 @@ from app.schemas.prediction import CandidateCondition
 from app.schemas.rag import RAGPassage
 
 
-# Conservative guard: user-facing text must not contain dose/quantity instructions.
+# ---------------------------------------------------------------------------
+# Wellness card configuration
+# ---------------------------------------------------------------------------
+
+REQUIRED_CARD_COUNT = 5
+
+CARD_CATEGORY_META = {
+    "traditional_food": {
+        "slug": "food",
+        "icon": "🍲",
+        "category": "food",
+    },
+    "herbal_support": {
+        "slug": "herbal",
+        "icon": "🌿",
+        "category": "traditional_options",
+    },
+    "daily_lifestyle": {
+        "slug": "lifestyle",
+        "icon": "🌤️",
+        "category": "lifestyle",
+    },
+    "yoga_pranayama": {
+        "slug": "yoga",
+        "icon": "🧘",
+        "category": "yoga",
+    },
+    "ayurvedic_wisdom": {
+        "slug": "ayurveda",
+        "icon": "🌱",
+        "category": "ayurvedic_perspective",
+    },
+}
+
+
+def get_fallback_wellness_cards() -> List[Dict[str, Any]]:
+    """Return safe, generic cards when generated cards are unavailable."""
+
+    defaults = {
+        "traditional_food": (
+            "Food and hydration",
+            "Choose balanced meals and maintain hydration as tolerated.",
+        ),
+        "herbal_support": (
+            "Traditional options",
+            (
+                "No sufficiently supported herbal suggestion is available. "
+                "Consult a qualified clinician before using herbal products."
+            ),
+        ),
+        "daily_lifestyle": (
+            "Daily lifestyle",
+            "Prioritize rest and avoid activities that worsen your symptoms.",
+        ),
+        "yoga_pranayama": (
+            "Gentle movement",
+            (
+                "Consider gentle movement only if it feels comfortable. "
+                "Stop if symptoms worsen."
+            ),
+        ),
+        "ayurvedic_wisdom": (
+            "Traditional perspective",
+            (
+                "Traditional wellness frameworks are educational and do not "
+                "establish a diagnosis or replace medical care."
+            ),
+        ),
+    }
+
+    cards = []
+
+    for category, (title, recommendation) in defaults.items():
+        cards.append(
+            {
+                "category": category,
+                "title": title,
+                "recommendation": recommendation,
+                "ayurvedic_context": (
+                    "General educational information; not a diagnosis or treatment."
+                ),
+                "safety_precautions": (
+                    "Seek medical advice for persistent or worsening symptoms."
+                ),
+                "citation_document_ids": [],
+            }
+        )
+
+    return cards
+
+
+# ---------------------------------------------------------------------------
+# Safety filters
+# ---------------------------------------------------------------------------
+
 _DOSING_PATTERN = re.compile(
     r"\b\d+(?:\.\d+)?\s*(?:-\s*\d+(?:\.\d+)?\s*)?"
-    r"(?:mg|mcg|µg|g|gm|grams?|ml|millilit(?:er|re)s?|tablets?|capsules?|pills?|"
-    r"drops?|tsp|tbsp|teaspoons?|tablespoons?)\b",
+    r"(?:mg|mcg|µg|g|gm|grams?|ml|millilit(?:er|re)s?|tablets?|capsules?|"
+    r"pills?|drops?|tsp|tbsp|teaspoons?|tablespoons?)\b",
     re.IGNORECASE,
 )
 
@@ -67,6 +161,7 @@ def _clean_text_list(items: Any, drop_dosing: bool = False) -> List[str]:
             continue
 
         text = item.strip()
+
         if not text:
             continue
 
@@ -80,6 +175,7 @@ def _clean_text_list(items: Any, drop_dosing: bool = False) -> List[str]:
 
 def _sanitize_generated_prose(result: Dict[str, Any]) -> None:
     """Replace generated prose containing doses or percentages with safe text."""
+
     for field, replacement in _SAFE_PROSE_REPLACEMENTS.items():
         value = result.get(field)
 
@@ -94,27 +190,96 @@ def _sanitize_generated_prose(result: Dict[str, Any]) -> None:
             result[field] = replacement
 
 
+def _normalize_wellness_cards(raw_cards: Any) -> List[Dict[str, Any]]:
+    """Convert Gemini card output to the structure expected by analyze.py."""
+
+    if not isinstance(raw_cards, list):
+        return []
+
+    normalized_cards = []
+
+    for category in CARD_CATEGORY_META:
+        matching_card = next(
+            (
+                card
+                for card in raw_cards
+                if isinstance(card, dict)
+                and (
+                    card.get("id") == category
+                    or card.get("category") == category
+                )
+            ),
+            None,
+        )
+
+        if not matching_card:
+            continue
+
+        recommendation = matching_card.get("recommendation") or (
+            "No sufficiently supported suggestion was retrieved for this category."
+        )
+
+        details = matching_card.get("details") or ""
+
+        # Do not pass dosage instructions through to the user.
+        if contains_dosing_instruction(recommendation):
+            recommendation = (
+                "No sufficiently supported suggestion is available. "
+                "Consult a qualified clinician."
+            )
+
+        if contains_dosing_instruction(details):
+            details = ""
+
+        normalized_cards.append(
+            {
+                "category": category,
+                "title": matching_card.get("title")
+                or category.replace("_", " ").title(),
+                "recommendation": recommendation,
+                "ayurvedic_context": (
+                    matching_card.get("ayurvedic_context") or details
+                ),
+                "safety_precautions": (
+                    matching_card.get("safety_precautions")
+                    or "Consult a qualified clinician if symptoms persist or worsen."
+                ),
+                "citation_document_ids": (
+                    matching_card.get("citation_document_ids")
+                    or matching_card.get("citations")
+                    or []
+                ),
+            }
+        )
+
+    return normalized_cards
+
+
+# ---------------------------------------------------------------------------
+# Gemini response schemas
+# ---------------------------------------------------------------------------
+
 class GeminiCandidateSchema(BaseModel):
     condition: str = Field(min_length=1)
     rank: int = Field(ge=1)
 
 
 class GeminiSynthesisSchema(BaseModel):
-    # Gemini-generated, user-facing fields
     symptom_summary: str = Field(min_length=1)
     recognized_symptoms_summary: str = ""
     candidate_ranking_explanation: str = ""
+
     candidate_conditions: List[GeminiCandidateSchema] = Field(
         default_factory=list
     )
 
-    # Existing fields
     dosha_imbalance: str = Field(
         description="Traditional Ayurvedic perspective, not a medical diagnosis."
     )
     ayurvedic_explanation: str
     traditional_perspective: str = ""
     evidence_grounded_summary: str
+
     recommendations: List[str] = Field(default_factory=list)
     herbs: List[str] = Field(default_factory=list)
     lifestyle_guidance: List[str] = Field(default_factory=list)
@@ -133,6 +298,10 @@ class GeminiSynthesisSchema(BaseModel):
     )
 
 
+# ---------------------------------------------------------------------------
+# Gemini service
+# ---------------------------------------------------------------------------
+
 class GeminiService:
     _instance: Optional["GeminiService"] = None
 
@@ -149,7 +318,8 @@ class GeminiService:
         return cls._instance
 
     def _init_client(self):
-        """Initialize Gemini when an API key is configured."""
+        """Initialize Gemini if an API key is configured."""
+
         if not settings.GEMINI_API_KEY:
             logger.warning(
                 "GEMINI_API_KEY not configured. Using fallback synthesis engine."
@@ -191,7 +361,7 @@ class GeminiService:
         duration: Optional[str] = None,
         severity: Optional[int] = 5,
     ) -> Dict[str, Any]:
-        """Conservative response when Gemini is unavailable."""
+        """Return a conservative response when Gemini is unavailable."""
 
         ayush_notes = []
 
@@ -262,7 +432,7 @@ class GeminiService:
             "warning_signs": warnings,
             "when_to_seek_care": _SAFE_CARE_MESSAGE,
             "urgency": urgency,
-            "wellness_cards": [],
+            "wellness_cards": get_fallback_wellness_cards(),
             "ayurvedic_citation_document_ids": [],
             "traditional_perspective_citations": [],
             "generated_by": "fallback",
@@ -283,7 +453,7 @@ class GeminiService:
         safety_urgency: Optional[str] = None,
         safety_alerts: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
-        """Generate analysis and ranked candidate possibilities using Gemini."""
+        """Generate symptom analysis and ranked candidate possibilities."""
 
         if not self.client:
             logger.warning(
@@ -364,6 +534,7 @@ CANDIDATE CONDITIONS:
 WELLNESS CARDS:
 - Return five wellness_cards in this order:
   traditional_food, herbal_support, daily_lifestyle, yoga_pranayama, ayurvedic_wisdom.
+- Each card must contain id, recommendation, details, evidence_status, citation_document_ids.
 - If evidence is insufficient, use recommendation:
   "No sufficiently supported suggestion was retrieved for this category."
 - For unavailable cards set evidence_status to "unavailable" and citation_document_ids to [].
@@ -452,6 +623,11 @@ Return exactly these fields:
                 }
                 for item in validated.candidate_conditions[:5]
             ]
+
+            # Normalize Gemini cards for analyze.py.
+            result["wellness_cards"] = _normalize_wellness_cards(
+                result.get("wellness_cards")
+            )
 
             # Enforce safety rules after model validation.
             result["herbs"] = []
