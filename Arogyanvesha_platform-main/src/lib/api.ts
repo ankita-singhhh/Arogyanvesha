@@ -1,117 +1,61 @@
-/**
- * Arogyanvesha — Axios API Client
- * Single instance used for ALL backend API calls.
- * Never import axios directly anywhere else in the codebase.
- */
+import axios from "axios";
 
-import axios, {
-  type AxiosError,
-  type InternalAxiosRequestConfig,
-} from "axios";
-import type { AppError } from "@/types";
-
-type NormalizedAppError = AppError & {
-  endpoint?: string;
-  responseBody?: unknown;
-  errorType?: string;
-};
-
-/* ─────────────────────────────────────────────────────────
-   INSTANCE
-───────────────────────────────────────────────────────── */
-
-// Set NEXT_PUBLIC_API_URL in Vercel to your deployed backend URL.
-// Example: https://your-backend.onrender.com/api/v1
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://arogyanvesha-1lfr.onrender.com/api/v1";
 
-export const api = axios.create({
-  baseURL: API_BASE_URL.replace(/\/+$/, ""),
-  timeout: 90000,
+const api = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
   },
 });
 
-/* ─────────────────────────────────────────────────────────
-   REQUEST INTERCEPTOR
-───────────────────────────────────────────────────────── */
-
+// Attach the saved access token to API requests.
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("arogya_access_token");
 
       if (token) {
-        config.headers.set("Authorization", `Bearer ${token}`);
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
 
     return config;
   },
-  (error: AxiosError) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
-/* ─────────────────────────────────────────────────────────
-   RESPONSE INTERCEPTOR
-───────────────────────────────────────────────────────── */
-
+// Clear an expired/invalid token and redirect to login.
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<{ message?: string; code?: string; field?: string }>) => {
-    const status = error.response?.status;
-
-    // Clear expired session tokens.
-    // Redirect only if the application actually uses authentication.
-    if (status === 401 && typeof window !== "undefined") {
+  (error) => {
+    if (
+      error.response?.status === 401 &&
+      typeof window !== "undefined"
+    ) {
       localStorage.removeItem("arogya_access_token");
-      window.location.href = "/login?reason=session_expired";
-      return Promise.reject(error);
+
+      if (!window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
+      }
     }
 
-    const appError: NormalizedAppError = {
-      code: error.response?.data?.code ?? "UNKNOWN_ERROR",
-      message:
-        error.response?.data?.message ??
-        error.message ??
-        "Something went wrong. Please try again.",
-      field: error.response?.data?.field ?? null,
-      statusCode: status,
-      endpoint: error.config?.url,
-      responseBody: error.response?.data,
-      errorType: "AxiosError",
-    };
-
-    return Promise.reject(appError);
-  },
+    return Promise.reject(error);
+  }
 );
 
-/* ─────────────────────────────────────────────────────────
-   SWR FETCHER
-───────────────────────────────────────────────────────── */
-
-export async function swrFetcher<T>(url: string): Promise<T> {
-  const response = await api.get<T>(url);
-  return response.data;
-}
-
-/* ─────────────────────────────────────────────────────────
-   API ROUTES
-   Paths are relative to NEXT_PUBLIC_API_URL.
-───────────────────────────────────────────────────────── */
-
 export const API_KEYS = {
-  // Existing backend routes
-  symptoms: "/symptoms",
-  prediction: "/predict",
-  rag: "/rag",
+  // Symptoms
+  symptoms: "/symptoms/extract",
+
+  // Analysis
+  prediction: "/predict", // Backend route exists, but returns 503 by design.
   symptomAnalysis: "/analyze",
 
-  // Chat
-  // Backend currently exposes POST /api/v1/chat.
-  // It does not expose conversation CRUD routes in the router shared.
+  // RAG and chat
+  rag: "/rag/query",
   chat: "/chat",
 
   // Prakriti
@@ -121,13 +65,13 @@ export const API_KEYS = {
 
   // Yoga
   yogaSessions: "/yoga/sessions",
-  yogaSession: (id: string) => `/yoga/sessions/${id}`,
+  yogaSession: (id: string | number) => `/yoga/sessions/${id}`,
   yogaFavorites: "/yoga/favorites",
   yogaProgress: "/yoga/progress",
 
-  // Skin
+  // Skin analysis
   skinAnalyses: "/skin/analyses",
-  skinAnalysis: (id: string) => `/skin/analyses/${id}`,
+  skinAnalysis: (id: string | number) => `/skin/analyses/${id}`,
 
   // Wisdom
   articles: "/wisdom/articles",
@@ -148,4 +92,6 @@ export const API_KEYS = {
 
   // Notifications
   notifications: "/notifications",
-} as const;
+};
+
+export default api;
