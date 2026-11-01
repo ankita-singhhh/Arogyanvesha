@@ -1,7 +1,5 @@
 "use client";
 
-import { FaceAuth } from "@/components/face/FaceAuth";
-
 export default function SecurityPage() {
   return (
     <main className="mx-auto max-w-xl p-6">
@@ -10,10 +8,8 @@ export default function SecurityPage() {
       </h1>
 
       <p className="mb-6 text-sm text-gray-600">
-        Register a passkey to sign in securely without entering your password.
+        Manage your account security settings.
       </p>
-
-      <FaceAuth mode="enroll" />
     </main>
   );
 }

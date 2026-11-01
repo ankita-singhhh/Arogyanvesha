@@ -6,7 +6,7 @@ export class IdentityResolutionError extends Error {
 }
 
 export type VerifiedIdentity = {
-  provider: "credentials" | "google" | "passkey";
+  provider: "credentials" | "google";
   subject: string;
   email: string;
   emailVerified: boolean;
