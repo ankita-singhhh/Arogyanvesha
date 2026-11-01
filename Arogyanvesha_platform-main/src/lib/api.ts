@@ -5,6 +5,7 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://arogyanvesha-1lfr.onrender.com/api/v1";
 
+// FastAPI backend (Render)
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -12,7 +13,15 @@ const api = axios.create({
   },
 });
 
-// Attach the saved access token to API requests.
+// Next.js API routes (same origin as frontend)
+export const webApi = axios.create({
+  baseURL: "/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Attach saved access token to FastAPI requests.
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
@@ -28,7 +37,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Clear an expired/invalid token and redirect to login.
+// Clear expired/invalid FastAPI token and redirect to login.
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -95,6 +104,6 @@ export const API_KEYS = {
   notifications: "/notifications",
 };
 
-// Supports both named and default imports.
+// Supports named and default imports.
 export { api };
 export default api;
