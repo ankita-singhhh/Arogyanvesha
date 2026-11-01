@@ -1,4 +1,3 @@
-
 /**
  * Arogyanvesha — Axios API Client
  * Single instance used for ALL backend API calls.
@@ -25,7 +24,7 @@ type NormalizedAppError = AppError & {
 // Example: https://your-backend.onrender.com/api/v1
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://arogy anvesha-1lfr.onrender.com/api/v1".replace(" ", "");
+  "https://arogyanvesha-1lfr.onrender.com/api/v1";
 
 export const api = axios.create({
   baseURL: API_BASE_URL.replace(/\/+$/, ""),
@@ -38,7 +37,6 @@ export const api = axios.create({
 
 /* ─────────────────────────────────────────────────────────
    REQUEST INTERCEPTOR
-   Attaches auth token from localStorage on every request.
 ───────────────────────────────────────────────────────── */
 
 api.interceptors.request.use(
@@ -58,7 +56,6 @@ api.interceptors.request.use(
 
 /* ─────────────────────────────────────────────────────────
    RESPONSE INTERCEPTOR
-   Normalises errors and handles expired sessions.
 ───────────────────────────────────────────────────────── */
 
 api.interceptors.response.use(
@@ -66,7 +63,8 @@ api.interceptors.response.use(
   (error: AxiosError<{ message?: string; code?: string; field?: string }>) => {
     const status = error.response?.status;
 
-    // 401 — session expired
+    // Clear expired session tokens.
+    // Redirect only if the application actually uses authentication.
     if (status === 401 && typeof window !== "undefined") {
       localStorage.removeItem("arogya_access_token");
       window.location.href = "/login?reason=session_expired";
@@ -100,25 +98,26 @@ export async function swrFetcher<T>(url: string): Promise<T> {
 }
 
 /* ─────────────────────────────────────────────────────────
-   SWR CACHE KEYS
+   API ROUTES
+   Paths are relative to NEXT_PUBLIC_API_URL.
 ───────────────────────────────────────────────────────── */
 
 export const API_KEYS = {
-  // Auth
-  me: "/auth/me",
+  // Existing backend routes
+  symptoms: "/symptoms",
+  prediction: "/predict",
+  rag: "/rag",
+  symptomAnalysis: "/analyze",
+
+  // Chat
+  // Backend currently exposes POST /api/v1/chat.
+  // It does not expose conversation CRUD routes in the router shared.
+  chat: "/chat",
 
   // Prakriti
   prakritiResult: "/prakriti/result",
   prakritiHistory: "/prakriti/history",
   prakritiQuestions: "/prakriti/questions",
-
-  // Chat
-  conversations: "/chat/conversations",
-  conversation: (id: string) => `/chat/conversations/${id}`,
-  messages: (id: string) => `/chat/conversations/${id}/messages`,
-
-  // Symptoms
-  symptomAnalysis: "/analyze",
 
   // Yoga
   yogaSessions: "/yoga/sessions",
