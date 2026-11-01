@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 const API_BASE_URL =
@@ -51,7 +52,7 @@ export const API_KEYS = {
   symptoms: "/symptoms/extract",
 
   // Analysis
-  prediction: "/predict", // Backend route exists, but returns 503 by design.
+  prediction: "/predict",
   symptomAnalysis: "/analyze",
 
   // RAG and chat
@@ -94,4 +95,6 @@ export const API_KEYS = {
   notifications: "/notifications",
 };
 
+// Supports both named and default imports.
+export { api };
 export default api;
