@@ -1,9 +1,22 @@
-from app.api.v1.endpoints import prakriti
+
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import symptoms, predict, rag, analyze, chat
-api_router.include_router(prakriti.router, prefix="/prakriti", tags=["Prakriti"])
+from app.api.v1.endpoints import (
+    analyze,
+    chat,
+    prakriti,
+    predict,
+    rag,
+    symptoms,
+)
+
 api_router = APIRouter(prefix="/api/v1")
+
+api_router.include_router(
+    prakriti.router,
+    prefix="/prakriti",
+    tags=["Prakriti"],
+)
 
 api_router.include_router(
     symptoms.router,
