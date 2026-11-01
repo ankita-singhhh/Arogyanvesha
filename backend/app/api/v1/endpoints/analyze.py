@@ -8,7 +8,6 @@ from app.schemas.rag import RAGQueryRequest
 
 from app.services.safety_service import SafetyService
 from app.services.symptom_extractor import SymptomExtractor
-from app.services.random_forest_service import RandomForestService
 from app.services.rag_service import RAGService
 from app.services.gemini_service import (
     GeminiService,
@@ -24,8 +23,9 @@ router = APIRouter()
 
 
 CANDIDATE_DISCLAIMER = (
-    "These are unconfirmed possibilities ranked by a statistical model from the symptoms you "
-    "entered. They are not diagnoses. Only a qualified clinician can determine the cause."
+    "These are AI-generated possibilities based on the symptoms you described. They are not "
+    "diagnoses, are not medically verified, and may be inaccurate. Only a qualified clinician "
+    "can determine the cause."
 )
 SYNTHESIS_EMERGENCY_MESSAGE = (
     "Your symptoms may indicate an urgent medical emergency. Please seek immediate "
@@ -300,18 +300,13 @@ def analyze_symptoms(request: AnalysisRequest):
         )
 
         # ---------------------------------------------------------
-        # STEP 6: Validate manually selected symptom chips
-        # ---------------------------------------------------------
+        # STEP 6: Merge manually selected symptom chips without loading RF.
         step_started_at = time.perf_counter()
-        rf_service = RandomForestService.get_instance()
-
         for chip in symptom_chips:
             normalized_chip = chip.strip().lower()
-
-            if normalized_chip in rf_service.feature_index_map:
-                if normalized_chip not in canonical_symptoms:
-                    canonical_symptoms.append(normalized_chip)
-        _log_step_timing("model_feature_validation", step_started_at, recognized=len(canonical_symptoms))
+            if normalized_chip and normalized_chip not in canonical_symptoms:
+                canonical_symptoms.append(normalized_chip)
+        _log_step_timing("symptom_chip_merge", step_started_at, recognized=len(canonical_symptoms))
 
         unmatched_symptoms = list(
             extraction.uncertain_symptoms or []
@@ -335,22 +330,6 @@ def analyze_symptoms(request: AnalysisRequest):
         retrieved_passages = []
 
         # ---------------------------------------------------------
-        # STEP 8: Random Forest prediction
-        # Candidate ranking still needs enough recognized symptoms.
-        # ---------------------------------------------------------
-        if canonical_symptoms and not clarification_needed:
-            step_started_at = time.perf_counter()
-            prediction = rf_service.predict(
-                symptoms=canonical_symptoms,
-                top_k=5,
-            )
-
-            candidates = (
-                prediction.candidate_conditions or []
-            )
-            _log_step_timing("random_forest_prediction", step_started_at, candidates=len(candidates))
-
-        # ---------------------------------------------------------
         # STEP 9: RAG knowledge retrieval
         # Optional context: cards are still produced if retrieval fails.
         # ---------------------------------------------------------
@@ -359,7 +338,7 @@ def analyze_symptoms(request: AnalysisRequest):
             retrieved_passages = _retrieve_grounding_passages(
                 RAGService.get_instance(),
                 symptom_text or " ".join(canonical_symptoms) or combined_text,
-                [candidate.condition for candidate in candidates],
+                [],
             )
         except Exception:
             logger.exception("RAG retrieval failed; continuing without retrieved passages.")
@@ -376,7 +355,7 @@ def analyze_symptoms(request: AnalysisRequest):
         synthesis = gemini_service.generate_synthesis(
             symptom_text=symptom_text or combined_text,
             recognized_symptoms=canonical_symptoms,
-            candidates=candidates,
+            candidates=[],  # Legacy argument; RF candidates are disabled.
             retrieved_passages=retrieved_passages,
             user_prakriti=request.user_prakriti,
             duration=request.duration,
@@ -392,6 +371,8 @@ def analyze_symptoms(request: AnalysisRequest):
             step_started_at,
             used_fallback=synthesis.get("generated_by") == "fallback",
         )
+
+        candidates = synthesis.get("candidate_conditions") or []
 
         # ---------------------------------------------------------
         # STEP 11: Validate and merge urgency
