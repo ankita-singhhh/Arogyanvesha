@@ -1,7 +1,7 @@
 
 /**
  * Arogyanvesha — Axios API Client
- * Single instance used for ALL API calls.
+ * Single instance used for ALL backend API calls.
  * Never import axios directly anywhere else in the codebase.
  */
 
@@ -21,12 +21,14 @@ type NormalizedAppError = AppError & {
    INSTANCE
 ───────────────────────────────────────────────────────── */
 
+// Set NEXT_PUBLIC_API_URL in Vercel to your deployed backend URL.
+// Example: https://your-backend.onrender.com/api/v1
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  "https://arogy anvesha-api.coder.blitz.cloud/api/v1".replace(" ", "");
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://arogy anvesha-1lfr.onrender.com/api/v1".replace(" ", "");
 
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE_URL.replace(/\/+$/, ""),
   timeout: 90000,
   headers: {
     "Content-Type": "application/json",
@@ -44,8 +46,8 @@ api.interceptors.request.use(
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("arogya_access_token");
 
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (token) {
+        config.headers.set("Authorization", `Bearer ${token}`);
       }
     }
 
@@ -56,8 +58,7 @@ api.interceptors.request.use(
 
 /* ─────────────────────────────────────────────────────────
    RESPONSE INTERCEPTOR
-   Normalises all errors into AppError shape.
-   Handles 401 — clears token and redirects to login.
+   Normalises errors and handles expired sessions.
 ───────────────────────────────────────────────────────── */
 
 api.interceptors.response.use(
@@ -72,7 +73,6 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Normalise to AppError
     const appError: NormalizedAppError = {
       code: error.response?.data?.code ?? "UNKNOWN_ERROR",
       message:
@@ -92,8 +92,6 @@ api.interceptors.response.use(
 
 /* ─────────────────────────────────────────────────────────
    SWR FETCHER
-   Default fetcher for all useSWR calls.
-   Usage: useSWR("/endpoint", swrFetcher)
 ───────────────────────────────────────────────────────── */
 
 export async function swrFetcher<T>(url: string): Promise<T> {
@@ -103,7 +101,6 @@ export async function swrFetcher<T>(url: string): Promise<T> {
 
 /* ─────────────────────────────────────────────────────────
    SWR CACHE KEYS
-   Centralised — never hardcode endpoint strings in components.
 ───────────────────────────────────────────────────────── */
 
 export const API_KEYS = {
