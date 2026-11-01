@@ -8,3 +8,4 @@ python-dotenv
 google-genai
 pydantic
 pydantic-settings
+huggingface_hub

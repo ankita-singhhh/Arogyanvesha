@@ -1,10 +1,9 @@
-import os
 import json
-
 from typing import List, Dict, Tuple, Optional
 
 import numpy as np
 import joblib
+from huggingface_hub import hf_hub_download
 
 from app.core.config import settings
 from app.core.logging import logger
@@ -19,11 +18,8 @@ class RandomForestService:
 
     def __init__(self):
         self.model = None
-
         self.features: List[str] = []
-
         self.feature_index_map: Dict[str, int] = {}
-
         self.classes: List[str] = []
 
         self._load_artifacts()
@@ -45,20 +41,16 @@ class RandomForestService:
 
     def _load_artifacts(self):
         """
-        Load the trained model and canonical symptom features.
-        Validate feature count, uniqueness and output classes.
+        Load the trained model from Hugging Face and canonical
+        symptom features from the local JSON file.
+
+        Validate feature count, uniqueness, and output classes.
         """
 
         logger.info(
             "Loading symptom features from: "
             f"{settings.SYMPTOM_FEATURES_PATH}"
         )
-
-        if not os.path.exists(settings.SYMPTOM_FEATURES_PATH):
-            raise FileNotFoundError(
-                "Features file not found at "
-                f"{settings.SYMPTOM_FEATURES_PATH}"
-            )
 
         with open(
             settings.SYMPTOM_FEATURES_PATH,
@@ -98,19 +90,22 @@ class RandomForestService:
             f"Loaded {len(self.features)} canonical symptom features."
         )
 
+        # Download model from Hugging Face
         logger.info(
-            f"Loading Random Forest model from: {settings.MODEL_PATH}"
+            "Downloading Random Forest model from Hugging Face..."
         )
 
-        if not os.path.exists(settings.MODEL_PATH):
-            raise FileNotFoundError(
-                f"Model file not found at {settings.MODEL_PATH}"
-            )
+        model_path = hf_hub_download(
+            repo_id="newcoder26/Arogyanvesha-RF",
+            filename="arogyanvesha_random_forest_final.joblib",
+            repo_type="model",
+        )
 
-        # Load the existing trained model.
-        self.model = joblib.load(settings.MODEL_PATH)
+        logger.info("Loading downloaded Random Forest model...")
 
-        # Check input dimensions.
+        self.model = joblib.load(model_path)
+
+        # Check input dimensions
         if not hasattr(self.model, "n_features_in_"):
             raise ValueError(
                 "Model does not expose n_features_in_. "
@@ -126,7 +121,7 @@ class RandomForestService:
                 f"{len(self.features)}."
             )
 
-        # Validate class labels.
+        # Validate class labels
         if not hasattr(self.model, "classes_"):
             raise ValueError(
                 "Loaded model does not expose classes_."
@@ -142,7 +137,7 @@ class RandomForestService:
                 "Random Forest model contains no output classes."
             )
 
-        # If the model retained feature names, compare them.
+        # Validate feature names if retained by the model
         model_feature_names = getattr(
             self.model,
             "feature_names_in_",
@@ -216,7 +211,6 @@ class RandomForestService:
 
             if clean in self.feature_index_map:
                 index = self.feature_index_map[clean]
-
                 canonical = self.features[index]
 
                 vector[0, index] = 1.0
@@ -224,7 +218,6 @@ class RandomForestService:
                 if canonical not in recognized_set:
                     recognized.append(canonical)
                     recognized_set.add(canonical)
-
             else:
                 if symptom not in unknown_set:
                     unknown.append(symptom)
@@ -264,7 +257,6 @@ class RandomForestService:
                 "Random Forest model has not been loaded."
             )
 
-        # Validate top_k.
         try:
             top_k = int(top_k)
         except (TypeError, ValueError):
@@ -275,14 +267,12 @@ class RandomForestService:
             min(top_k, len(self.classes)),
         )
 
-        # Construct input vector.
         vector, recognized, unknown = (
             self.construct_feature_vector(symptoms)
         )
 
         active_count = int(np.count_nonzero(vector))
 
-        # No recognized feature means no prediction.
         if active_count == 0:
             return PredictionResponse(
                 status="unrecognized_symptoms",
@@ -294,7 +284,6 @@ class RandomForestService:
                 active_features_count=0,
             )
 
-        # Final input shape validation.
         if vector.shape != (1, len(self.features)):
             raise ValueError(
                 f"Invalid feature vector shape: {vector.shape}"
@@ -302,7 +291,6 @@ class RandomForestService:
 
         try:
             probabilities = self.model.predict_proba(vector)[0]
-
         except Exception as exc:
             logger.exception(
                 "Random Forest inference failed."
@@ -317,7 +305,6 @@ class RandomForestService:
             dtype=np.float64,
         )
 
-        # Validate model output.
         if probabilities.ndim != 1:
             raise ValueError(
                 "Unexpected prediction output dimensions."
@@ -339,7 +326,6 @@ class RandomForestService:
                 "Model returned negative prediction scores."
             )
 
-        # Sort by model score.
         top_indices = np.argsort(
             probabilities
         )[::-1][:top_k]
