@@ -1,10 +1,14 @@
+
 /**
  * Arogyanvesha — Axios API Client
  * Single instance used for ALL API calls.
  * Never import axios directly anywhere else in the codebase.
  */
 
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import type { AppError } from "@/types";
 
 type NormalizedAppError = AppError & {
@@ -17,8 +21,12 @@ type NormalizedAppError = AppError & {
    INSTANCE
 ───────────────────────────────────────────────────────── */
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "https://arogy anvesha-api.coder.blitz.cloud/api/v1".replace(" ", "");
+
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
+  baseURL: API_BASE_URL,
   timeout: 90000,
   headers: {
     "Content-Type": "application/json",
@@ -35,10 +43,12 @@ api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("arogya_access_token");
+
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
@@ -98,45 +108,48 @@ export async function swrFetcher<T>(url: string): Promise<T> {
 
 export const API_KEYS = {
   // Auth
-  me:                "/auth/me",
+  me: "/auth/me",
 
   // Prakriti
-  prakritiResult:    "/prakriti/result",
-  prakritiHistory:   "/prakriti/history",
+  prakritiResult: "/prakriti/result",
+  prakritiHistory: "/prakriti/history",
   prakritiQuestions: "/prakriti/questions",
 
   // Chat
-  conversations:     "/chat/conversations",
-  conversation:      (id: string) => `/chat/conversations/${id}`,
-  messages:          (id: string) => `/chat/conversations/${id}/messages`,
+  conversations: "/chat/conversations",
+  conversation: (id: string) => `/chat/conversations/${id}`,
+  messages: (id: string) => `/chat/conversations/${id}/messages`,
+
+  // Symptoms
+  symptomAnalysis: "/analyze",
 
   // Yoga
-  yogaSessions:      "/yoga/sessions",
-  yogaSession:       (id: string) => `/yoga/sessions/${id}`,
-  yogaFavorites:     "/yoga/favorites",
-  yogaProgress:      "/yoga/progress",
+  yogaSessions: "/yoga/sessions",
+  yogaSession: (id: string) => `/yoga/sessions/${id}`,
+  yogaFavorites: "/yoga/favorites",
+  yogaProgress: "/yoga/progress",
 
   // Skin
-  skinAnalyses:      "/skin/analyses",
-  skinAnalysis:      (id: string) => `/skin/analyses/${id}`,
+  skinAnalyses: "/skin/analyses",
+  skinAnalysis: (id: string) => `/skin/analyses/${id}`,
 
   // Wisdom
-  articles:          "/wisdom/articles",
-  article:           (slug: string) => `/wisdom/articles/${slug}`,
+  articles: "/wisdom/articles",
+  article: (slug: string) => `/wisdom/articles/${slug}`,
 
   // Herbs
-  herbs:             "/herbs",
-  herb:              (slug: string) => `/herbs/${slug}`,
+  herbs: "/herbs",
+  herb: (slug: string) => `/herbs/${slug}`,
 
   // Progress
-  healthScore:       "/progress/health-score",
-  activityFeed:      "/progress/activity",
-  streak:            "/progress/streak",
+  healthScore: "/progress/health-score",
+  activityFeed: "/progress/activity",
+  streak: "/progress/streak",
 
   // Routine
-  routine:           "/routine",
-  routineLog:        "/routine/log",
+  routine: "/routine",
+  routineLog: "/routine/log",
 
   // Notifications
-  notifications:     "/notifications",
+  notifications: "/notifications",
 } as const;
