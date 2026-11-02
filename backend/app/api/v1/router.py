@@ -9,6 +9,8 @@ from app.api.v1.endpoints import (
     rag,
     symptoms,
     yoga,
+    wisdom,
+    herbs,
 )
 
 api_router = APIRouter(prefix="/api/v1")
@@ -18,6 +20,17 @@ api_router.include_router(
     yoga.router,
     prefix="/yoga",
     tags=["yoga"],
+)
+api_router.include_router(
+    wisdom.router,
+    prefix="/wisdom",
+    tags=["Wisdom"],
+)
+
+api_router.include_router(
+    herbs.router,
+    prefix="/herbs",
+    tags=["Herbs"],
 )
 api_router.include_router(
     prakriti.router,
