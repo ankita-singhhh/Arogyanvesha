@@ -23,21 +23,14 @@ const SUGGESTED_QUESTIONS = [
   "How can I improve my sleep naturally?",
 ];
 
-/** Shape of a message as returned by the backend (snake_case). */
+/** A message as returned by the FastAPI backend (snake_case). */
 interface ApiMessage {
   id: string;
   conversation_id: string;
   role: Message["role"];
   content: string;
   created_at: string;
-}
-
-/** Shape of the POST /api/chat/conversations/:id/messages response. */
-interface SendMessageResponse {
-  id: string;
-  content: string;
-  created_at?: string;
-  message?: string;
+  confidence?: Message["confidence"] | null;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -232,6 +225,7 @@ export default function ChatConversationPage() {
             role: message.role,
             content: message.content,
             createdAt: message.created_at,
+            confidence: message.confidence ?? undefined,
           }))
         );
       })
@@ -260,7 +254,7 @@ export default function ChatConversationPage() {
     // Reset textarea height after clearing
     if (inputRef.current) inputRef.current.style.height = "24px";
 
-    // Add user message
+    // Add user message (optimistic)
     const userMsg: Message = {
       id: generateId(),
       conversationId,
@@ -280,40 +274,28 @@ export default function ChatConversationPage() {
 
     setIsTyping(true);
     try {
-      const response = await fetch(
-        `/api/chat/conversations/${conversationId}/messages`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: text }),
-        }
+      const { data } = await api.post<ApiMessage>(
+        `/chat/conversations/${conversationId}/messages`,
+        { content: text }
       );
-      const payload = (await response.json()) as SendMessageResponse;
-
-      if (!response.ok) {
-        throw new Error(
-          payload.message || "AI Vaidya is temporarily unavailable."
-        );
-      }
-
-      const reply = payload.content;
-      const createdAt = payload.created_at ?? new Date().toISOString();
 
       addMessage({
-        id: payload.id,
+        id: data.id,
         conversationId,
         role: "assistant",
-        content: reply,
-        createdAt,
+        content: data.content,
+        createdAt: data.created_at,
+        confidence: data.confidence ?? undefined,
       });
       updateConversation(conversationId, {
-        lastMessage: reply.slice(0, 80),
-        updatedAt: createdAt,
+        lastMessage: data.content.slice(0, 80),
+        updatedAt: data.created_at,
       });
     } catch (error) {
-      setSendError(
-        error instanceof Error ? error.message : "Unable to send your message."
-      );
+      const detail = (
+        error as { response?: { data?: { detail?: string } } }
+      )?.response?.data?.detail;
+      setSendError(detail ?? "AI Vaidya is temporarily unavailable.");
     } finally {
       setIsTyping(false);
     }
