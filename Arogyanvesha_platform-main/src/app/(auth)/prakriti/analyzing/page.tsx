@@ -38,7 +38,11 @@ interface PrakritiSubmitResponse {
   completedAt?: string;
 }
 
-const VALID_DOSHAS: readonly Dosha[] = ["Vata", "Pitta", "Kapha"];
+const VALID_DOSHAS: readonly Dosha[] = ["vata", "pitta", "kapha"];
+
+function normalizeDosha(value: string): string {
+  return value.trim().toLowerCase();
+}
 
 function isDosha(value: string): value is Dosha {
   return VALID_DOSHAS.includes(value as Dosha);
@@ -71,16 +75,23 @@ export default function PrakritiAnalyzingPage() {
 
         const serverResult = response.data;
 
-        // Validate server-returned dosha values before using them.
-        if (!isDosha(serverResult.primaryDosha)) {
+        // Normalize API values so "Vata" and "vata" both work.
+        const primaryDosha = normalizeDosha(serverResult.primaryDosha);
+        const secondaryDosha =
+          serverResult.secondaryDosha === null
+            ? null
+            : normalizeDosha(serverResult.secondaryDosha);
+
+        // Validate the values against the Dosha type.
+        if (!isDosha(primaryDosha)) {
           throw new Error(
             `Invalid primary dosha received: ${serverResult.primaryDosha}`
           );
         }
 
         if (
-          serverResult.secondaryDosha !== null &&
-          !isDosha(serverResult.secondaryDosha)
+          secondaryDosha !== null &&
+          !isDosha(secondaryDosha)
         ) {
           throw new Error(
             `Invalid secondary dosha received: ${serverResult.secondaryDosha}`
@@ -98,8 +109,8 @@ export default function PrakritiAnalyzingPage() {
         const calculatedResult: PrakritiResult = {
           id: serverResult.id,
           userId: currentUserId,
-          primaryDosha: serverResult.primaryDosha,
-          secondaryDosha: serverResult.secondaryDosha,
+          primaryDosha,
+          secondaryDosha,
           balance: {
             vata: serverResult.vataPct,
             pitta: serverResult.pittaPct,
@@ -114,7 +125,7 @@ export default function PrakritiAnalyzingPage() {
 
         useAuthStore.getState().updateUser({
           prakritiCompleted: true,
-          primaryDosha: serverResult.primaryDosha,
+          primaryDosha,
         });
 
         router.replace("/prakriti/result");
