@@ -151,7 +151,7 @@ export default function ChatConversationPage() {
     api.get(`/chat/conversations/${conversationId}/messages`).then((response) => {
       if (cancelled) return;
       setMessages(
-        response.data.map((message: any) => ({
+        response.data.map((message: unknown) => ({
           id: message.id,
           conversationId: message.conversation_id,
           role: message.role,

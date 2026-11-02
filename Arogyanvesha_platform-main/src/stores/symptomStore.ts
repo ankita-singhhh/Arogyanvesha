@@ -310,7 +310,7 @@ export const useSymptomStore = create<SymptomState>((set, get) => ({
 
   addSymptomChip: (symptom) => {
     const { selectedSymptoms } = get();
-    const clean = symptom.trim();
+    const clean = typeof symptom === "string" ? symptom.trim() : "";
 
     if (clean && !selectedSymptoms.includes(clean)) {
       set({ selectedSymptoms: [...selectedSymptoms, clean] });
@@ -373,7 +373,7 @@ export const useSymptomStore = create<SymptomState>((set, get) => ({
         const response = await api.post<AnalysisResult>(
           "/analyze",
           {
-            symptomText: symptomText.trim(),
+            symptomText: symptomText?.trim() ?? "",
             symptomChips: selectedSymptoms,
             duration,
             severity,

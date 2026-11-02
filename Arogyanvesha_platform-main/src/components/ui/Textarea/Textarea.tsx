@@ -80,7 +80,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const internalRef = React.useRef<HTMLTextAreaElement>(null);
     const resolvedRef = (ref as React.RefObject<HTMLTextAreaElement>) ?? internalRef;
 
-    const inputId = id ?? React.useId();
+    const generatedId = React.useId();
+    const inputId = id ?? generatedId;
     const errorId = `${inputId}-error`;
     const helperId = `${inputId}-helper`;
 

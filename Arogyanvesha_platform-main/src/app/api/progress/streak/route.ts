@@ -29,7 +29,7 @@ export const GET = withApiHandler(async () => {
 
   // 1. Calculate Active Streak
   let currentStreak = 0;
-  let expectedDate = dates[0] === todayStr ? todayStr : dates[0] === yesterdayStr ? yesterdayStr : null;
+  const expectedDate = dates[0] === todayStr ? todayStr : dates[0] === yesterdayStr ? yesterdayStr : null;
 
   if (expectedDate !== null) {
     let checkDateStr = expectedDate;
