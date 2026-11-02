@@ -23,7 +23,6 @@ const SUGGESTED_QUESTIONS = [
   "How can I improve my sleep naturally?",
 ];
 
-/** A message as returned by the FastAPI backend (snake_case). */
 interface ApiMessage {
   id: string;
   conversation_id: string;
@@ -31,6 +30,11 @@ interface ApiMessage {
   content: string;
   created_at: string;
   confidence?: Message["confidence"] | null;
+}
+
+interface ApiConversation {
+  id: string;
+  title: string;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -43,6 +47,7 @@ function TypingIndicator() {
       <div className="w-8 h-8 rounded-full bg-brand-burgundy flex items-center justify-center shrink-0">
         <span className="text-text-inverted text-micro font-bold">A</span>
       </div>
+
       <div className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-tl-sm bg-surface-card border border-border-default">
         <div className="w-2 h-2 rounded-full bg-dosha-vata dosha-dot-vata" />
         <div className="w-2 h-2 rounded-full bg-dosha-pitta dosha-dot-pitta" />
@@ -72,7 +77,6 @@ function MessageBubble({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Avatar */}
       {isUser ? (
         <Avatar name={userName} size="sm" className="shrink-0 mt-1" />
       ) : (
@@ -81,7 +85,6 @@ function MessageBubble({
         </div>
       )}
 
-      {/* Content */}
       <div
         className={cn("flex flex-col gap-1 max-w-[78%]", isUser && "items-end")}
       >
@@ -140,12 +143,12 @@ function MessageBubble({
               >
                 {message.content}
               </ReactMarkdown>
+
               {message.isStreaming && <span className="streaming-cursor" />}
             </div>
           )}
         </div>
 
-        {/* Confidence badge */}
         {!isUser && message.confidence && !message.isStreaming && (
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-pill bg-bg-subtle w-fit">
             <div
@@ -184,6 +187,7 @@ export default function ChatConversationPage() {
   const router = useRouter();
   const conversationId = params.id as string;
   const shouldReduce = useReducedMotion();
+
   const { user } = useAuthStore();
   const { result: prakritiResult } = usePrakritiStore();
 
@@ -200,24 +204,27 @@ export default function ChatConversationPage() {
   const [input, setInput] = React.useState("");
   const [isTyping, setIsTyping] = React.useState(false);
   const [sendError, setSendError] = React.useState<string | null>(null);
+
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   const conversation = conversations.find((c) => c.id === conversationId);
 
-  /* Load messages for this conversation */
+  /* Load messages; create a fresh conversation if the ID is missing */
   React.useEffect(() => {
     let cancelled = false;
 
-    const currentActive = useChatStore.getState().activeConversationId;
-    if (currentActive !== conversationId) {
+    const loadMessages = async () => {
+      setSendError(null);
       setActiveConversation(conversationId);
-    }
 
-    api
-      .get<ApiMessage[]>(`/chat/conversations/${conversationId}/messages`)
-      .then((response) => {
+      try {
+        const response = await api.get<ApiMessage[]>(
+          `/chat/conversations/${conversationId}/messages`
+        );
+
         if (cancelled) return;
+
         setMessages(
           response.data.map((message) => ({
             id: message.id,
@@ -228,15 +235,46 @@ export default function ChatConversationPage() {
             confidence: message.confidence ?? undefined,
           }))
         );
-      })
-      .catch(() => {
-        if (!cancelled) setMessages([]);
-      });
+      } catch (error) {
+        if (cancelled) return;
+
+        const status = (
+          error as { response?: { status?: number } }
+        )?.response?.status;
+
+        if (status === 404) {
+          try {
+            const { data: newConversation } =
+              await api.post<ApiConversation>(
+                "/chat/conversations",
+                { title: "New consultation" }
+              );
+
+            if (cancelled) return;
+
+            router.replace(`/chat/${newConversation.id}`);
+          } catch {
+            if (!cancelled) {
+              setSendError("Could not start a new consultation.");
+            }
+          }
+        } else {
+          setSendError("Could not load this conversation.");
+        }
+      }
+    };
+
+    void loadMessages();
 
     return () => {
       cancelled = true;
     };
-  }, [conversationId, setActiveConversation, setMessages]);
+  }, [
+    conversationId,
+    router,
+    setActiveConversation,
+    setMessages,
+  ]);
 
   /* Auto-scroll to latest message */
   React.useEffect(() => {
@@ -245,16 +283,18 @@ export default function ChatConversationPage() {
     });
   }, [messages, isTyping, shouldReduce]);
 
+  /* Send message */
   const sendMessage = async () => {
     if (!input.trim() || isStreaming || isTyping) return;
+
     const text = input.trim();
     setInput("");
     setSendError(null);
 
-    // Reset textarea height after clearing
-    if (inputRef.current) inputRef.current.style.height = "24px";
+    if (inputRef.current) {
+      inputRef.current.style.height = "24px";
+    }
 
-    // Add user message (optimistic)
     const userMsg: Message = {
       id: generateId(),
       conversationId,
@@ -262,9 +302,9 @@ export default function ChatConversationPage() {
       content: text,
       createdAt: new Date().toISOString(),
     };
+
     addMessage(userMsg);
 
-    // Update conversation title if first user message
     if (messages.filter((m) => m.role === "user").length === 0) {
       updateConversation(conversationId, {
         title: text.length > 50 ? text.slice(0, 50) + "…" : text,
@@ -273,6 +313,7 @@ export default function ChatConversationPage() {
     }
 
     setIsTyping(true);
+
     try {
       const { data } = await api.post<ApiMessage>(
         `/chat/conversations/${conversationId}/messages`,
@@ -287,6 +328,7 @@ export default function ChatConversationPage() {
         createdAt: data.created_at,
         confidence: data.confidence ?? undefined,
       });
+
       updateConversation(conversationId, {
         lastMessage: data.content.slice(0, 80),
         updatedAt: data.created_at,
@@ -295,6 +337,7 @@ export default function ChatConversationPage() {
       const detail = (
         error as { response?: { data?: { detail?: string } } }
       )?.response?.data?.detail;
+
       setSendError(detail ?? "AI Vaidya is temporarily unavailable.");
     } finally {
       setIsTyping(false);
@@ -304,13 +347,12 @@ export default function ChatConversationPage() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      void sendMessage();
     }
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
-    // Auto-resize
     e.target.style.height = "auto";
     e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
   };
@@ -389,7 +431,6 @@ export default function ChatConversationPage() {
           <p className="mb-3 text-body-sm text-status-error">{sendError}</p>
         )}
 
-        {/* Suggested questions — only when few messages */}
         {messages.length <= 2 && (
           <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
             {SUGGESTED_QUESTIONS.slice(0, 4).map((q) => (
@@ -436,7 +477,7 @@ export default function ChatConversationPage() {
 
           <button
             type="button"
-            onClick={sendMessage}
+            onClick={() => void sendMessage()}
             disabled={!input.trim() || isStreaming || isTyping}
             className={cn(
               "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
