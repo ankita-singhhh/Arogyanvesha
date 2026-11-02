@@ -41,7 +41,7 @@ api_router.include_router(
 
 # Add conversations router
 api_router.include_router(
-    conversations.router,
+    conversation.router,
     prefix="/chat/conversations",
     tags=["Conversations"],
 )
