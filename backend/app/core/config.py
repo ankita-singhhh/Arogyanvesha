@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 from typing import List
@@ -22,13 +21,15 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-    # AI Configuration
+    # Gemini AI Configuration
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-2.5-flash"
-
-    # Allow Gemini enough time to complete requests.
     GEMINI_REQUEST_TIMEOUT_MS: int = 30000
     GEMINI_RETRY_ATTEMPTS: int = 1
+
+    # Supabase Configuration
+    NEXT_PUBLIC_SUPABASE_URL: str = ""
+    SUPABASE_SECRET_KEY: str = ""
 
     # ML Model Configuration
     MODEL_PATH: str = str(
