@@ -11,7 +11,7 @@
     "test:auth-contract": "node --test tests/auth-contract.test.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.107.0",
+    "@google/genai": "^1.52.0",
     "@hookform/resolvers": "^5.4.0",
     "@mediapipe/tasks-vision": "^1.2.0",
     "@simplewebauthn/browser": "^14.0.0",

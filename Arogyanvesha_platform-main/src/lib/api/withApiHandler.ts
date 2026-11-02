@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SupabaseConfigurationError } from "@/lib/supabase";
 
-export function withApiHandler(handler: (req: NextRequest, context?: unknown) => Promise<Response>, route = "unknown") {
-  return async (req: NextRequest, context?: unknown) => {
+export function withApiHandler<TContext = unknown>(handler: (req: NextRequest, context: TContext) => Promise<Response>, route = "unknown") {
+  return async (req: NextRequest, context: TContext) => {
     try {
       return await handler(req, context);
     } catch (error: unknown) {

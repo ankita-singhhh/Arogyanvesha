@@ -3,9 +3,11 @@ import { getSession } from "@/lib/auth/getSession";
 import { supabase } from "@/lib/supabase";
 import { withApiHandler } from "@/lib/api/withApiHandler";
 
-export const GET = withApiHandler(async (_request: NextRequest, context: any) => {
+type RouteContext = { params: Promise<{ id: string }> };
+
+export const GET = withApiHandler(async (_request: NextRequest, context: RouteContext) => {
   const session = await getSession();
-  const userId = (session.user as any).id;
+  const userId = (session.user as { id: string }).id;
   const { id } = await context.params;
 
   const { data: analysis, error } = await supabase
@@ -19,18 +21,25 @@ export const GET = withApiHandler(async (_request: NextRequest, context: any) =>
     return NextResponse.json({ code: "NOT_FOUND", message: "Skin analysis not found." }, { status: 404 });
   }
 
-  // Generate public storage URL for display
-  const { data: { publicUrl } } = supabase.storage.from("skin-images").getPublicUrl(analysis.image_path);
+  // The skin-images bucket must be private. A short-lived signed URL is only
+  // created after the record has been scoped to the authenticated owner.
+  const { data: signedImage, error: signedUrlError } = await supabase.storage
+    .from("skin-images")
+    .createSignedUrl(analysis.image_path, 60 * 10);
+
+  if (signedUrlError) {
+    console.error("Skin image signed URL error:", signedUrlError);
+  }
 
   return NextResponse.json({
     ...analysis,
-    imageUrl: publicUrl,
+    imageUrl: signedImage?.signedUrl ?? null,
   }, { status: 200 });
 });
 
-export const DELETE = withApiHandler(async (_request: NextRequest, context: any) => {
+export const DELETE = withApiHandler(async (_request: NextRequest, context: RouteContext) => {
   const session = await getSession();
-  const userId = (session.user as any).id;
+  const userId = (session.user as { id: string }).id;
   const { id } = await context.params;
 
   // Find image path first

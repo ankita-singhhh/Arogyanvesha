@@ -16,7 +16,7 @@ const CONFIG = {
       'Open your mouth wide, stick out your tongue fully, then click "Take Photo".',
     guideLabel: "Position tongue inside the oval",
     frame: "aspect-video max-w-md",
-    apiPath: "/api/diagnosis/tongue",
+    apiPath: "/diagnosis/tongue",
     tips: ["Open wide", "Bright light", "On waking"],
     GuideOverlay: () => (
       <svg
@@ -53,7 +53,7 @@ const CONFIG = {
       'Look straight at the camera lens, keep your eye fully open, then click "Take Photo".',
     guideLabel: "Centre your eye inside the oval",
     frame: "aspect-video max-w-md",
-    apiPath: "/api/diagnosis/eye",
+    apiPath: "/diagnosis/eye",
     tips: ["Look forward", "No contacts", "Even lighting"],
     GuideOverlay: () => (
       <svg
@@ -92,7 +92,7 @@ const CONFIG = {
       "Take a bare-faced photo in natural light, facing the camera with your face inside the oval.",
     guideLabel: "Position your face within the oval",
     frame: "aspect-[3/4] max-w-xs",
-    apiPath: "/api/diagnosis/skin",
+    apiPath: "/skin/analyze",
     tips: ["Natural light", "No makeup", "Face forward"],
     GuideOverlay: () => (
       <svg
@@ -332,6 +332,13 @@ export default function DiagnosisCapturePage() {
 
       if (!data?.id) {
         throw new Error("The diagnosis API returned an invalid response.");
+      }
+
+      // Skin analyses are persisted server-side. Unlike the transient tongue
+      // and eye responses, send the user to the owner-scoped saved record.
+      if (diagType === "skin") {
+        router.push(`/skin/result/${data.id}`);
+        return;
       }
 
       sessionStorage.setItem(

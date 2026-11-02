@@ -33,7 +33,7 @@ GOOGLE_CLIENT_ID=OPTIONAL
 GOOGLE_CLIENT_SECRET=OPTIONAL
 PYTHON_API_URL=OPTIONAL
 GEMINI_API_KEY=OPTIONAL
-ANTHROPIC_API_KEY=OPTIONAL
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
 Use a separate staging environment file and staging deployment variables. Before starting the app, confirm the URL contains the staging project reference; do not reuse a production secret or URL. The application fails safely when the URL or server secret is absent, and rejects `sb_publishable_` keys for privileged operations.
@@ -54,9 +54,13 @@ Face login is disabled. The prior design exposed a shared secret in browser code
 
 Resend is not used by the current implementation. `RESEND_API_KEY` is optional and should remain unset until a complete, reviewed transactional-email flow is implemented. Password reset endpoints return `501` rather than issue unusable tokens or claim delivery.
 
-## Backend / Gemini
+## Gemini (Next.js and backend)
 
-Copy `backend/.env.example` to `backend/.env`. `GEMINI_API_KEY` is optional: the backend has documented deterministic fallbacks. To run it:
+Set `GEMINI_API_KEY` and, optionally, `GEMINI_MODEL` in both Vercel (for skin,
+tongue, and eye image analysis) and Render (for chat and symptom synthesis).
+The Next.js image routes return `503 AI_UNAVAILABLE` without a key; they never
+invent an analysis. Copy `backend/.env.example` to `backend/.env` to run the
+Python service:
 
 ```powershell
 cd D:\arogyan\Arogyanvesha\backend

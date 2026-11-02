@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/getSession";
 import { withApiHandler } from "@/lib/api/withApiHandler";
-import { anthropic } from "@/lib/ai/anthropic";
+import { analyzeImageWithGemini, isGeminiConfigured } from "@/lib/ai/gemini";
 import { EYE_ANALYSIS_PROMPT } from "@/lib/ai/prompts";
 
 export const POST = withApiHandler(async (request: NextRequest) => {
   const session = await getSession();
-  const userId = (session.user as any).id;
+  const userId = (session.user as { id: string }).id;
 
   const formData = await request.formData();
   const file = formData.get("file") as File;
@@ -29,63 +29,47 @@ export const POST = withApiHandler(async (request: NextRequest) => {
   const id = `eye_${userId}_${Date.now()}`;
 
   // Do not fabricate a health result when the configured AI service is unavailable.
-  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.startsWith("replace-")) {
+  if (!isGeminiConfigured()) {
     return NextResponse.json({ code: "AI_UNAVAILABLE", message: "Eye analysis is temporarily unavailable." }, { status: 503 });
   }
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // Invoke Claude Vision
+  // Invoke Gemini Vision.
   let aiResponseText = "";
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 1200,
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: EYE_ANALYSIS_PROMPT },
-            {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: mimeType as "image/jpeg" | "image/png" | "image/webp",
-                data: buffer.toString("base64"),
-              },
-            },
-          ],
-        },
-      ],
-    });
-    aiResponseText = response.content[0]?.type === "text" ? response.content[0].text : "{}";
+    aiResponseText = await analyzeImageWithGemini(
+      EYE_ANALYSIS_PROMPT,
+      buffer,
+      mimeType as "image/jpeg" | "image/png" | "image/webp",
+    );
   } catch (err) {
-    console.error("Claude Vision API failure (eye):", err);
-    return NextResponse.json({ code: "AI_ERROR", message: "Failed to analyze eye image using AI. Check your ANTHROPIC_API_KEY." }, { status: 500 });
+    console.error("Gemini Vision API failure (eye):", err);
+    return NextResponse.json({ code: "AI_ERROR", message: "Failed to analyze eye image using Gemini." }, { status: 503 });
   }
 
-  // Parse JSON from Claude response
-  let result: any = {};
+  // Parse JSON from Gemini response.
+  let result: Record<string, unknown> = {};
   try {
     const jsonStart = aiResponseText.indexOf("{");
     const jsonEnd = aiResponseText.lastIndexOf("}") + 1;
     result = JSON.parse(aiResponseText.substring(jsonStart, jsonEnd));
   } catch {
-    console.error("Claude malformed JSON (eye):", aiResponseText);
+    console.error("Gemini malformed JSON (eye):", aiResponseText);
     return NextResponse.json({ code: "AI_PARSING_FAILED", message: "Failed to parse eye diagnosis." }, { status: 500 });
   }
 
   return NextResponse.json({
     id,
     type: "eye",
-    dominantDosha: result.dominantDosha ?? null,
-    scleraColor: result.scleraColor ?? null,
-    observations: result.observations ?? [],
-    imbalances: result.imbalances ?? [],
+    dominantDosha: typeof result.dominantDosha === "string" ? result.dominantDosha : null,
+    scleraColor: typeof result.scleraColor === "string" ? result.scleraColor : null,
+    observations: Array.isArray(result.observations) ? result.observations : [],
+    imbalances: Array.isArray(result.imbalances) ? result.imbalances : [],
     score: typeof result.score === "number" ? result.score : null,
-    recommendations: result.recommendations ?? [],
-    dietAdvice: result.dietAdvice ?? "",
-    herbsRecommended: result.herbsRecommended ?? [],
+    recommendations: Array.isArray(result.recommendations) ? result.recommendations : [],
+    dietAdvice: typeof result.dietAdvice === "string" ? result.dietAdvice : "",
+    herbsRecommended: Array.isArray(result.herbsRecommended) ? result.herbsRecommended : [],
   }, { status: 200 });
 });

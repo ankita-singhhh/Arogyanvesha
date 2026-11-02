@@ -1,13 +1,12 @@
 
 import axios from "axios";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://arogyanvesha-1lfr.onrender.com/api/v1";
-
-// FastAPI backend (Render)
+// Browser features use the authenticated Next.js BFF.  It owns the session
+// cookie and forwards only the narrowly scoped requests that need FastAPI.
+// Calling the Python service directly bypassed both the cookie session and
+// the ownership checks in the route handlers.
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,23 +20,7 @@ export const webApi = axios.create({
   },
 });
 
-// Attach saved access token to FastAPI requests.
-api.interceptors.request.use(
-  (config) => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("arogya_access_token");
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Clear expired/invalid FastAPI token and redirect to login.
+// A 401 here means the NextAuth cookie session is no longer valid.
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -45,8 +28,6 @@ api.interceptors.response.use(
       error.response?.status === 401 &&
       typeof window !== "undefined"
     ) {
-      localStorage.removeItem("arogya_access_token");
-
       if (!window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }

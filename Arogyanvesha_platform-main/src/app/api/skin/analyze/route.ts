@@ -2,19 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/getSession";
 import { supabase } from "@/lib/supabase";
 import { withApiHandler } from "@/lib/api/withApiHandler";
-import { anthropic } from "@/lib/ai/anthropic";
+import { analyzeImageWithGemini, isGeminiConfigured } from "@/lib/ai/gemini";
 import { SKIN_ANALYSIS_PROMPT } from "@/lib/ai/prompts";
+
+type SkinModelResult = {
+  skinType?: unknown;
+  dominantDosha?: unknown;
+  score?: unknown;
+  conditions?: unknown;
+  recommendations?: unknown;
+};
 
 export const POST = withApiHandler(async (request: NextRequest) => {
   const session = await getSession();
-  const userId = (session.user as any).id;
-  const userPlan = (session.user as any).plan || "free";
+  const user = session.user as { id: string; plan?: string };
+  const userId = user.id;
+  const userPlan = user.plan || "free";
 
   const formData = await request.formData();
   const file = formData.get("file") as File;
 
   if (!file) {
     return NextResponse.json({ code: "BAD_REQUEST", message: "Image file is required." }, { status: 400 });
+  }
+
+  if (!isGeminiConfigured()) {
+    return NextResponse.json({ code: "AI_UNAVAILABLE", message: "Skin analysis is temporarily unavailable." }, { status: 503 });
   }
 
   // 1. Validate File constraints
@@ -66,51 +79,43 @@ export const POST = withApiHandler(async (request: NextRequest) => {
 
   if (storageError) {
     console.error("Storage upload skin error:", storageError);
+    return NextResponse.json({ code: "STORAGE_ERROR", message: "Unable to securely store the image for analysis." }, { status: 503 });
   }
 
-  // 4. Invoke Claude Vision SDK with base64 image
+  // 4. Invoke Gemini Vision with the validated image.
   let aiResponseText = "";
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 1000,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: SKIN_ANALYSIS_PROMPT,
-            },
-            {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: file.type as any,
-                data: buffer.toString("base64"),
-              },
-            },
-          ],
-        },
-      ],
-    });
-
-    aiResponseText = response.content[0]?.type === "text" ? response.content[0].text : "{}";
+    aiResponseText = await analyzeImageWithGemini(
+      SKIN_ANALYSIS_PROMPT,
+      buffer,
+      file.type as "image/jpeg" | "image/png" | "image/webp",
+    );
   } catch (err) {
-    console.error("Claude Vision API failure:", err);
+    console.error("Gemini Vision API failure:", err);
+    await supabase.storage.from("skin-images").remove([filePath]);
     return NextResponse.json({ code: "AI_ERROR", message: "Failed to analyze skin image using AI." }, { status: 500 });
   }
 
   // 5. Parse Claude JSON response
-  let analysisResult: any = {};
+  let analysisResult: SkinModelResult = {};
   try {
     const jsonStart = aiResponseText.indexOf("{");
     const jsonEnd = aiResponseText.lastIndexOf("}") + 1;
     const cleanJson = aiResponseText.substring(jsonStart, jsonEnd);
-    analysisResult = JSON.parse(cleanJson);
-  } catch (parseErr) {
+    analysisResult = JSON.parse(cleanJson) as SkinModelResult;
+  } catch {
     console.error("Claude malformed JSON response:", aiResponseText);
+    await supabase.storage.from("skin-images").remove([filePath]);
     return NextResponse.json({ code: "AI_PARSING_FAILED", message: "Failed to parse skin diagnostic parameters." }, { status: 500 });
+  }
+
+  const { skinType, dominantDosha, score, conditions, recommendations } = analysisResult;
+  if (typeof skinType !== "string" || !skinType.trim() ||
+      typeof dominantDosha !== "string" || !dominantDosha.trim() ||
+      !Number.isInteger(score) || typeof score !== "number" || score < 0 || score > 100 ||
+      !Array.isArray(conditions) || !Array.isArray(recommendations)) {
+    await supabase.storage.from("skin-images").remove([filePath]);
+    return NextResponse.json({ code: "AI_INVALID_RESPONSE", message: "The analysis service returned an incomplete result. Please retry." }, { status: 503 });
   }
 
   // 6. Save results to skin_analyses
@@ -119,11 +124,11 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     .insert({
       user_id: userId,
       image_path: filePath,
-      skin_type: analysisResult.skinType || "Normal",
-      dominant_dosha: analysisResult.dominantDosha || "pitta",
-      score: analysisResult.score || 80,
-      conditions: analysisResult.conditions || [],
-      recommendations: analysisResult.recommendations || [],
+      skin_type: skinType.trim(),
+      dominant_dosha: dominantDosha.trim().toLowerCase(),
+      score,
+      conditions,
+      recommendations,
       ai_raw_response: aiResponseText.substring(0, 9500),
     })
     .select("id")
@@ -131,6 +136,7 @@ export const POST = withApiHandler(async (request: NextRequest) => {
 
   if (insertError || !dbRecord) {
     console.error("Insert skin error:", insertError);
+    await supabase.storage.from("skin-images").remove([filePath]);
     return NextResponse.json({ code: "DATABASE_ERROR", message: "Failed to store skin diagnostics." }, { status: 500 });
   }
 
@@ -139,7 +145,7 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     user_id: userId,
     type: "skin",
     title: "Analyzed Skin Constitution",
-    description: `Determined Skin Type: ${analysisResult.skinType || "Normal"} (Score: ${analysisResult.score || 80}/100).`,
+    description: `Recorded skin wellness observation: ${skinType.trim()} (Score: ${score}/100).`,
   });
 
   return NextResponse.json({ id: dbRecord.id }, { status: 200 });

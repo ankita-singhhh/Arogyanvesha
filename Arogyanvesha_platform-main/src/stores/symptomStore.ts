@@ -369,9 +369,10 @@ export const useSymptomStore = create<SymptomState>((set, get) => ({
       ];
 
       try {
-        // api baseURL should already include /api/v1.
+        // This goes through the authenticated Next.js BFF, which adds
+        // Prakriti context and securely calls the FastAPI analysis service.
         const response = await api.post<AnalysisResult>(
-          "/analyze",
+          "/symptoms/analyze",
           {
             symptomText: symptomText?.trim() ?? "",
             symptomChips: selectedSymptoms,
