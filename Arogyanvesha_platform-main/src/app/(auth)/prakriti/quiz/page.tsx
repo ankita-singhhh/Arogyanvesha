@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks";
 import { usePrakritiStore } from "@/stores";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { PageContainer } from "@/components/layout/PageContainer";
 import type { Dosha, PrakritiQuestion } from "@/types";
@@ -16,7 +17,8 @@ import type { Dosha, PrakritiQuestion } from "@/types";
 
 const MOCK_QUESTIONS: PrakritiQuestion[] = [
   {
-    id: 0, category: "physical",
+    id: 0,
+    category: "physical",
     text: "How would you describe your body frame?",
     options: [
       { id: "v0", text: "Thin, light, difficult to gain weight", dosha: "vata" },
@@ -25,7 +27,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 1, category: "physical",
+    id: 1,
+    category: "physical",
     text: "What best describes your skin?",
     options: [
       { id: "v1", text: "Dry, rough, or thin — tends to crack", dosha: "vata" },
@@ -34,7 +37,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 2, category: "digestive",
+    id: 2,
+    category: "digestive",
     text: "How is your digestion typically?",
     options: [
       { id: "v2", text: "Irregular — sometimes strong, sometimes weak", dosha: "vata" },
@@ -43,7 +47,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 3, category: "mental",
+    id: 3,
+    category: "mental",
     text: "How do you typically make decisions?",
     options: [
       { id: "v3", text: "Quickly, but I often change my mind", dosha: "vata" },
@@ -52,7 +57,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 4, category: "sleep",
+    id: 4,
+    category: "sleep",
     text: "How would you describe your sleep?",
     options: [
       { id: "v4", text: "Light, interrupted — I wake up easily", dosha: "vata" },
@@ -61,7 +67,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 5, category: "emotional",
+    id: 5,
+    category: "emotional",
     text: "Under stress, how do you typically react?",
     options: [
       { id: "v5", text: "Anxious, worried, overwhelmed", dosha: "vata" },
@@ -70,7 +77,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 6, category: "physical",
+    id: 6,
+    category: "physical",
     text: "How do you feel about cold weather?",
     options: [
       { id: "v6", text: "I dislike cold — I always feel chilly", dosha: "vata" },
@@ -79,7 +87,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 7, category: "mental",
+    id: 7,
+    category: "mental",
     text: "How would you describe your learning style?",
     options: [
       { id: "v7", text: "I learn quickly but also forget quickly", dosha: "vata" },
@@ -88,7 +97,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 8, category: "digestive",
+    id: 8,
+    category: "digestive",
     text: "How is your appetite?",
     options: [
       { id: "v8", text: "Variable — sometimes I forget to eat", dosha: "vata" },
@@ -97,7 +107,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 9, category: "physical",
+    id: 9,
+    category: "physical",
     text: "How would you describe your hair?",
     options: [
       { id: "v9", text: "Dry, frizzy, thin or coarse", dosha: "vata" },
@@ -106,7 +117,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 10, category: "emotional",
+    id: 10,
+    category: "emotional",
     text: "How do you typically feel emotionally?",
     options: [
       { id: "v10", text: "Enthusiastic but prone to anxiety", dosha: "vata" },
@@ -115,7 +127,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 11, category: "physical",
+    id: 11,
+    category: "physical",
     text: "How are your joints and bones?",
     options: [
       { id: "v11", text: "Prominent, cracking sounds, prone to dryness", dosha: "vata" },
@@ -124,7 +137,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 12, category: "mental",
+    id: 12,
+    category: "mental",
     text: "How do you handle change?",
     options: [
       { id: "v12", text: "I embrace change but it can make me anxious", dosha: "vata" },
@@ -133,7 +147,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 13, category: "digestive",
+    id: 13,
+    category: "digestive",
     text: "How do you experience thirst?",
     options: [
       { id: "v13", text: "Variable — I often forget to drink water", dosha: "vata" },
@@ -142,7 +157,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 14, category: "physical",
+    id: 14,
+    category: "physical",
     text: "How is your energy throughout the day?",
     options: [
       { id: "v14", text: "Bursts of energy followed by fatigue", dosha: "vata" },
@@ -151,7 +167,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 15, category: "emotional",
+    id: 15,
+    category: "emotional",
     text: "What are your speech patterns like?",
     options: [
       { id: "v15", text: "Fast, talkative, sometimes tangential", dosha: "vata" },
@@ -160,7 +177,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 16, category: "sleep",
+    id: 16,
+    category: "sleep",
     text: "How long do you usually sleep?",
     options: [
       { id: "v16", text: "Less than 7 hours — I wake early or late", dosha: "vata" },
@@ -169,7 +187,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 17, category: "physical",
+    id: 17,
+    category: "physical",
     text: "How do you respond to exercise?",
     options: [
       { id: "v17", text: "I enjoy it but tire quickly and need rest", dosha: "vata" },
@@ -178,7 +197,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 18, category: "mental",
+    id: 18,
+    category: "mental",
     text: "How would others describe your personality?",
     options: [
       { id: "v18", text: "Creative, expressive, enthusiastic", dosha: "vata" },
@@ -187,7 +207,8 @@ const MOCK_QUESTIONS: PrakritiQuestion[] = [
     ],
   },
   {
-    id: 19, category: "digestive",
+    id: 19,
+    category: "digestive",
     text: "What foods do you naturally crave?",
     options: [
       { id: "v19", text: "Warm, moist, oily foods", dosha: "vata" },
@@ -209,8 +230,6 @@ interface OptionCardProps {
 }
 
 function OptionCard({ option, selected, onSelect, index }: OptionCardProps) {
-
-
   return (
     <motion.button
       type="button"
@@ -220,7 +239,7 @@ function OptionCard({ option, selected, onSelect, index }: OptionCardProps) {
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-gold",
         selected
           ? "border-brand-burgundy bg-brand-burgundy/5 shadow-burgundy"
-          : "border-border-default bg-surface-card hover:border-brand-burgundy/40 hover:shadow-md",
+          : "border-border-default bg-surface-card hover:border-brand-burgundy/40 hover:shadow-md"
       )}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -228,34 +247,52 @@ function OptionCard({ option, selected, onSelect, index }: OptionCardProps) {
       whileTap={{ scale: 0.99 }}
     >
       <div className="flex items-start gap-4">
-        {/* Option letter */}
-        <div className={cn(
-          "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-body-sm transition-all duration-200",
-          selected
-            ? "bg-brand-burgundy text-text-inverted"
-            : "bg-bg-subtle text-text-muted",
-        )}>
+        <div
+          className={cn(
+            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-body-sm transition-all duration-200",
+            selected
+              ? "bg-brand-burgundy text-text-inverted"
+              : "bg-bg-subtle text-text-muted"
+          )}
+        >
           {String.fromCharCode(65 + index)}
         </div>
 
         <div className="flex-1">
-          <p className={cn(
-            "text-body font-medium leading-snug transition-colors duration-200",
-            selected ? "text-brand-burgundy" : "text-text-body",
-          )}>
+          <p
+            className={cn(
+              "text-body font-medium leading-snug transition-colors duration-200",
+              selected ? "text-brand-burgundy" : "text-text-body"
+            )}
+          >
             {option.text}
           </p>
         </div>
 
-        {/* Selected indicator */}
-        <div className={cn(
-          "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all duration-200",
-          selected ? "border-brand-burgundy bg-brand-burgundy" : "border-border-strong",
-        )}>
+        <div
+          className={cn(
+            "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all duration-200",
+            selected
+              ? "border-brand-burgundy bg-brand-burgundy"
+              : "border-border-strong"
+          )}
+        >
           {selected && (
-            <motion.svg className="w-3 h-3 text-text-inverted" viewBox="0 0 12 12" fill="none"
-              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500 }}>
-              <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <motion.svg
+              className="w-3 h-3 text-text-inverted"
+              viewBox="0 0 12 12"
+              fill="none"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500 }}
+            >
+              <path
+                d="M2 6l3 3 5-5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </motion.svg>
           )}
         </div>
@@ -271,6 +308,7 @@ function OptionCard({ option, selected, onSelect, index }: OptionCardProps) {
 export default function PrakritiQuizPage() {
   const router = useRouter();
   const shouldReduce = useReducedMotion();
+
   const {
     questions,
     answers,
@@ -282,7 +320,10 @@ export default function PrakritiQuizPage() {
     setAnalyzing,
   } = usePrakritiStore();
 
-  // Init quiz with mock questions
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
+  // Initialize quiz with mock questions
   React.useEffect(() => {
     if (status === "idle" || questions.length === 0) {
       startQuiz(MOCK_QUESTIONS);
@@ -290,13 +331,21 @@ export default function PrakritiQuizPage() {
   }, [status, questions.length, startQuiz]);
 
   const currentQuestion = questions[currentQuestionIndex];
-  const currentAnswer = answers.find((a) => a.questionId === currentQuestionIndex);
-  const progress = questions.length > 0 ? ((currentQuestionIndex) / questions.length) * 100 : 0;
+  const currentAnswer = answers.find(
+    (answer) => answer.questionId === currentQuestionIndex
+  );
+
+  const progress =
+    questions.length > 0
+      ? ((currentQuestionIndex + 1) / questions.length) * 100
+      : 0;
+
   const isLast = currentQuestionIndex === questions.length - 1;
   const canProceed = !!currentAnswer;
 
   const handleSelect = (optionId: string, dosha: Dosha) => {
-    if (!currentQuestion) return;
+    if (!currentQuestion || isSubmitting) return;
+
     answerQuestion({
       questionId: currentQuestionIndex,
       selectedOptionId: optionId,
@@ -304,10 +353,49 @@ export default function PrakritiQuizPage() {
     });
   };
 
-  const handleNext = () => {
-    if (isLast && canProceed) {
+  const handleNext = async () => {
+    if (!canProceed || isSubmitting) return;
+
+    if (!isLast) {
+      if (currentQuestion && currentAnswer) {
+        answerQuestion({
+          questionId: currentQuestionIndex,
+          selectedOptionId: currentAnswer.selectedOptionId,
+          dosha: currentAnswer.dosha,
+        });
+      }
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      // Convert answers to the backend's expected { question_id: dosha } format.
+      const backendAnswers = Object.fromEntries(
+        answers.map((answer) => [
+          String(answer.questionId),
+          answer.dosha,
+        ])
+      );
+
+      const response = await api.post("/prakriti/submit", {
+        answers: backendAnswers,
+      });
+
+      // Keep the server result in the frontend store if your store exposes setResult.
+      // The result page can also retrieve it with GET /prakriti/result.
+      console.log("Prakriti assessment saved:", response.data);
+
       setAnalyzing();
       router.push("/prakriti/analyzing");
+    } catch (error) {
+      console.error("Failed to submit Prakriti assessment:", error);
+      setSubmitError(
+        "We couldn't save your assessment. Please check your connection and try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -323,7 +411,6 @@ export default function PrakritiQuizPage() {
 
   return (
     <div className="min-h-screen bg-bg-base">
-      {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-1 bg-border-default">
         <motion.div
           className="h-full bg-gradient-to-r from-brand-burgundy to-brand-gold"
@@ -333,18 +420,27 @@ export default function PrakritiQuizPage() {
       </div>
 
       <PageContainer className="py-12 max-w-2xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
             type="button"
             onClick={() => {
-              if (currentQuestionIndex > 0) goToPreviousQuestion();
-              else router.push("/prakriti");
+              if (isSubmitting) return;
+
+              if (currentQuestionIndex > 0) {
+                goToPreviousQuestion();
+              } else {
+                router.push("/prakriti");
+              }
             }}
+            disabled={isSubmitting}
             className="flex items-center gap-2 text-body-sm text-text-muted hover:text-text-body transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd"/>
+              <path
+                fillRule="evenodd"
+                d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
+                clipRule="evenodd"
+              />
             </svg>
             {currentQuestionIndex > 0 ? "Previous" : "Back"}
           </button>
@@ -354,14 +450,16 @@ export default function PrakritiQuizPage() {
               {currentQuestionIndex + 1} of {questions.length}
             </span>
             <div className="flex gap-1">
-              {questions.map((_, i) => (
+              {questions.map((_, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className={cn(
                     "h-1.5 rounded-full transition-all duration-300",
-                    i < currentQuestionIndex ? "bg-brand-burgundy w-4" :
-                    i === currentQuestionIndex ? "bg-brand-gold w-6" :
-                    "bg-border-default w-1.5",
+                    index < currentQuestionIndex
+                      ? "bg-brand-burgundy w-4"
+                      : index === currentQuestionIndex
+                      ? "bg-brand-gold w-6"
+                      : "bg-border-default w-1.5"
                   )}
                 />
               ))}
@@ -369,40 +467,42 @@ export default function PrakritiQuizPage() {
           </div>
         </div>
 
-        {/* Question */}
         <AnimatePresence mode="wait">
-          <motion.div key={currentQuestionIndex}
+          <motion.div
+            key={currentQuestionIndex}
             initial={{ opacity: 0, x: shouldReduce ? 0 : 30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: shouldReduce ? 0 : -30 }}
-            transition={{ duration: 0.3 }}>
-
-            {/* Category badge */}
+            transition={{ duration: 0.3 }}
+          >
             <div className="mb-4">
               <span className="text-label font-semibold text-brand-gold uppercase tracking-wider">
                 {categoryLabels[currentQuestion.category]}
               </span>
             </div>
 
-            {/* Question text */}
             <h2 className="text-h2 font-display font-bold text-text-heading mb-8 leading-snug">
               {currentQuestion.text}
             </h2>
 
-            {/* Options */}
             <div className="flex flex-col gap-3 mb-10">
-              {currentQuestion.options.map((option, i) => (
+              {currentQuestion.options.map((option, index) => (
                 <OptionCard
                   key={option.id}
                   option={option}
                   selected={currentAnswer?.selectedOptionId === option.id}
                   onSelect={() => handleSelect(option.id, option.dosha)}
-                  index={i}
+                  index={index}
                 />
               ))}
             </div>
 
-            {/* Navigation */}
+            {submitError && (
+              <p role="alert" className="mb-4 text-sm text-red-600">
+                {submitError}
+              </p>
+            )}
+
             <div className="flex items-center justify-between">
               <p className="text-body-sm text-text-muted">
                 {answers.length} of {questions.length} answered
@@ -412,30 +512,34 @@ export default function PrakritiQuizPage() {
                 <Button
                   variant="primary"
                   size="lg"
-                  disabled={!canProceed}
+                  disabled={!canProceed || isSubmitting}
                   onClick={handleNext}
                   className="bg-gradient-burgundy border-0 shadow-burgundy"
                 >
-                  Complete Assessment
+                  {isSubmitting ? "Saving assessment..." : "Complete Assessment"}
                 </Button>
               ) : (
                 <Button
                   variant="primary"
                   size="md"
-                  disabled={!canProceed}
+                  disabled={!canProceed || isSubmitting}
                   onClick={() => {
-                    if (canProceed && currentQuestion) {
+                    if (canProceed && currentAnswer) {
                       answerQuestion({
                         questionId: currentQuestionIndex,
-                        selectedOptionId: currentAnswer!.selectedOptionId,
-                        dosha: currentAnswer!.dosha,
+                        selectedOptionId: currentAnswer.selectedOptionId,
+                        dosha: currentAnswer.dosha,
                       });
                     }
                   }}
                 >
                   Next question
                   <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd"/>
+                    <path
+                      fillRule="evenodd"
+                      d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 01.0 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </Button>
               )}
