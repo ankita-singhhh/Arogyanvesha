@@ -1,3 +1,4 @@
+```tsx
 "use client";
 
 import * as React from "react";
@@ -29,19 +30,19 @@ const STEPS = [
 ];
 
 interface PrakritiSubmitResponse {
-  primary_dosha: string;
-  secondary_dosha: string | null;
-  scores: {
-    vata: number;
-    pitta: number;
-    kapha: number;
-  };
+  id: string;
+  primaryDosha: string;
+  secondaryDosha: string | null;
+  vataPct: number;
+  pittaPct: number;
+  kaphaPct: number;
+  completedAt: string;
 }
 
 const VALID_DOSHAS: readonly Dosha[] = ["vata", "pitta", "kapha"];
 
-function normalizeDosha(value: string): string {
-  return value.trim().toLowerCase();
+function normalizeDosha(value: unknown): string {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
 
 function isDosha(value: string): value is Dosha {
@@ -75,37 +76,43 @@ export default function PrakritiAnalyzingPage() {
 
         const serverResult = response.data;
 
-        const primaryDosha = normalizeDosha(serverResult.primary_dosha);
+        if (!serverResult || typeof serverResult !== "object") {
+          throw new Error("Invalid response received from Prakriti API.");
+        }
+
+        const primaryDosha = normalizeDosha(serverResult.primaryDosha);
         const secondaryDosha =
-          serverResult.secondary_dosha === null
+          serverResult.secondaryDosha === null
             ? null
-            : normalizeDosha(serverResult.secondary_dosha);
+            : normalizeDosha(serverResult.secondaryDosha);
 
         if (!isDosha(primaryDosha)) {
-          throw new Error(
-            `Invalid primary dosha received: ${serverResult.primary_dosha}`
-          );
+          throw new Error("Invalid primary dosha received from API.");
         }
 
         if (
           secondaryDosha !== null &&
           !isDosha(secondaryDosha)
         ) {
-          throw new Error(
-            `Invalid secondary dosha received: ${serverResult.secondary_dosha}`
-          );
+          throw new Error("Invalid secondary dosha received from API.");
         }
 
-        const { vata, pitta, kapha } = serverResult.scores;
-        const totalScore = vata + pitta + kapha;
+        const { vataPct, pittaPct, kaphaPct } = serverResult;
 
-        if (totalScore <= 0) {
-          throw new Error("The API returned empty Prakriti scores.");
+        if (
+          ![vataPct, pittaPct, kaphaPct].every(
+            (score) =>
+              typeof score === "number" && Number.isFinite(score)
+          )
+        ) {
+          throw new Error("Invalid Prakriti scores received from API.");
         }
 
-        const vataPct = Math.round((vata / totalScore) * 100);
-        const pittaPct = Math.round((pitta / totalScore) * 100);
-        const kaphaPct = 100 - vataPct - pittaPct;
+        const totalPct = vataPct + pittaPct + kaphaPct;
+
+        if (totalPct !== 100) {
+          throw new Error("Prakriti percentages must total 100.");
+        }
 
         // Keep the animation visible for at least 5.5 seconds.
         await new Promise((resolve) => setTimeout(resolve, 5500));
@@ -116,7 +123,7 @@ export default function PrakritiAnalyzingPage() {
           useAuthStore.getState().user?.id || "anonymous";
 
         const calculatedResult: PrakritiResult = {
-          id: crypto.randomUUID(),
+          id: serverResult.id || crypto.randomUUID(),
           userId: currentUserId,
           primaryDosha,
           secondaryDosha: secondaryDosha ?? primaryDosha,
@@ -125,7 +132,7 @@ export default function PrakritiAnalyzingPage() {
             pitta: pittaPct,
             kapha: kaphaPct,
           },
-          completedAt: new Date().toISOString(),
+          completedAt: serverResult.completedAt || new Date().toISOString(),
           recommendations: [],
         };
 
@@ -301,3 +308,4 @@ export default function PrakritiAnalyzingPage() {
     </div>
   );
 }
+```
