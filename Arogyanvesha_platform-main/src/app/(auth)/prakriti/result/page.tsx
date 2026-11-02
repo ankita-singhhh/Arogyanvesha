@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { usePrakritiStore } from "@/stores";
-import { webApi } from "@/lib/api";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { PageContainer } from "@/components/layout/PageContainer";
@@ -317,8 +317,8 @@ export default function PrakritiResultPage() {
     let cancelled = false;
 
     if (!result) {
-      webApi
-        .get("/api/prakriti/result")
+      api
+        .get("/prakriti/result")
         .then((res) => {
           if (cancelled) return;
 
