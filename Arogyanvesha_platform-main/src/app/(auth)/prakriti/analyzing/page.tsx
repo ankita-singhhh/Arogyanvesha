@@ -7,7 +7,7 @@ import { usePrakritiStore, useAuthStore } from "@/stores";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { prakritiAnalyzing, processingStep } from "@/lib/animations";
 import { webApi } from "@/lib/api";
-import type { PrakritiResult } from "@/types";
+import type { PrakritiResult, Dosha } from "@/types";
 
 const STEPS = [
   {
@@ -38,6 +38,12 @@ interface PrakritiSubmitResponse {
   completedAt?: string;
 }
 
+const VALID_DOSHAS: readonly Dosha[] = ["Vata", "Pitta", "Kapha"];
+
+function isDosha(value: string): value is Dosha {
+  return VALID_DOSHAS.includes(value as Dosha);
+}
+
 export default function PrakritiAnalyzingPage() {
   const router = useRouter();
   const { answers, setResult, resetQuiz } = usePrakritiStore();
@@ -58,13 +64,28 @@ export default function PrakritiAnalyzingPage() {
 
     const calculateAndSave = async () => {
       try {
-        // Submit answers to the Next.js API route, which persists them in Supabase.
         const response = await webApi.post<PrakritiSubmitResponse>(
           "/api/prakriti/submit",
           { answers }
         );
 
         const serverResult = response.data;
+
+        // Validate server-returned dosha values before using them.
+        if (!isDosha(serverResult.primaryDosha)) {
+          throw new Error(
+            `Invalid primary dosha received: ${serverResult.primaryDosha}`
+          );
+        }
+
+        if (
+          serverResult.secondaryDosha !== null &&
+          !isDosha(serverResult.secondaryDosha)
+        ) {
+          throw new Error(
+            `Invalid secondary dosha received: ${serverResult.secondaryDosha}`
+          );
+        }
 
         // Keep the animation visible for at least 5.5 seconds.
         await new Promise((resolve) => setTimeout(resolve, 5500));
