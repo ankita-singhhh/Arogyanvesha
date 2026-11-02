@@ -12,6 +12,8 @@ import type { Herb } from "@/types";
 const PAGE_SIZE = 24;
 const FETCH_LIMIT = 100;
 
+type DoshaEffect = "increases" | "decreases" | "neutral";
+
 type HerbApiItem = {
   id: string;
   slug: string;
@@ -31,6 +33,14 @@ type HerbApiResponse =
   | {
       herbs?: HerbApiItem[];
     };
+
+function normalizeDoshaEffect(value?: string | null): DoshaEffect {
+  if (value === "increases" || value === "decreases" || value === "neutral") {
+    return value;
+  }
+
+  return "neutral";
+}
 
 export default function HerbsPage() {
   const [herbs, setHerbs] = React.useState<Herb[]>([]);
@@ -69,9 +79,9 @@ export default function HerbsPage() {
             description: herb.description ?? "",
             benefits: Array.isArray(herb.benefits) ? herb.benefits : [],
             doshaEffect: {
-              vata: herb.vata_effect ?? "neutral",
-              pitta: herb.pitta_effect ?? "neutral",
-              kapha: herb.kapha_effect ?? "neutral",
+              vata: normalizeDoshaEffect(herb.vata_effect),
+              pitta: normalizeDoshaEffect(herb.pitta_effect),
+              kapha: normalizeDoshaEffect(herb.kapha_effect),
             },
             imageUrl: herb.image_url ?? undefined,
             category: herb.category ?? "",
@@ -207,9 +217,7 @@ export default function HerbsPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() =>
-                    setVisibleCount((count) => count + PAGE_SIZE)
-                  }
+                  onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
                 >
                   Show more
                 </Button>
