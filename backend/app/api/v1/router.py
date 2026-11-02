@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.api.v1.endpoints import (
     analyze,
     chat,
-    conversations,  # Add this import
+    conversation,  # Add this import
     prakriti,
     predict,
     rag,
