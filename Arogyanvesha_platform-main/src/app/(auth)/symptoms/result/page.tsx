@@ -152,8 +152,9 @@ export default function SymptomResultPage() {
                         {cand.condition}
                       </h3>
                       <p className="text-micro text-text-muted">
-                        Model rank {cand.rank} •{" "}
-                        {cand.score_type.replace(/_/g, " ")}
+                        Model rank {cand.rank}
+                        {cand.score_type !== "gemini_generated_rank" &&
+                          ` • ${cand.score_type.replace(/_/g, " ")}`}
                       </p>
                     </div>
                   </div>
