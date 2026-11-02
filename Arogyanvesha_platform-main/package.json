@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/auth-contract.test.mjs tests/registration-recovery.test.mjs tests/yoga-practice.test.mjs tests/wisdom-seed.test.mjs",
+    "test": "node --test tests/auth-contract.test.mjs tests/registration-recovery.test.mjs tests/yoga-practice.test.mjs tests/yoga-pose-alignment.test.mjs tests/yoga-pose-library.test.mjs tests/wisdom-seed.test.mjs",
     "test:auth-contract": "node --test tests/auth-contract.test.mjs"
   },
   "dependencies": {

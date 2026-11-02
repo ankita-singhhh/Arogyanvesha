@@ -7,6 +7,59 @@ import { withApiHandler } from "@/lib/api/withApiHandler";
 const PYTHON_API_URL =
   process.env.PYTHON_API_URL || "http://127.0.0.1:8000";
 
+type Dosha = "vata" | "pitta" | "kapha";
+type PrakritiPercentages = Record<Dosha, number>;
+type PrakritiContext = {
+  primary?: Dosha;
+  secondary?: Dosha;
+  percentages?: PrakritiPercentages;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function normalizePrakriti(data: Record<string, unknown> | null): PrakritiContext | null {
+  if (!data) return null;
+
+  const normalizeDosha = (value: unknown): Dosha | undefined => {
+    if (typeof value !== "string") return undefined;
+    const dosha = value.trim().toLowerCase();
+    return dosha === "vata" || dosha === "pitta" || dosha === "kapha"
+      ? dosha
+      : undefined;
+  };
+
+  const primary = normalizeDosha(data.primary_dosha);
+  const savedSecondary = normalizeDosha(data.secondary_dosha);
+  const secondary =
+    savedSecondary && savedSecondary !== primary ? savedSecondary : undefined;
+  const normalizePercentage = (value: unknown): number | undefined =>
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= 0 &&
+    value <= 100
+      ? value
+      : undefined;
+  const vata = normalizePercentage(data.vata_pct);
+  const pitta = normalizePercentage(data.pitta_pct);
+  const kapha = normalizePercentage(data.kapha_pct);
+  const percentages =
+    vata !== undefined &&
+    pitta !== undefined &&
+    kapha !== undefined &&
+    vata + pitta + kapha === 100
+      ? { vata, pitta, kapha }
+      : undefined;
+
+  const context: PrakritiContext = {};
+  if (primary) context.primary = primary;
+  if (secondary) context.secondary = secondary;
+  if (percentages) context.percentages = percentages;
+
+  return Object.keys(context).length > 0 ? context : null;
+}
+
 function logUpstreamFailure(
   diagnostic: Record<string, unknown>
 ): void {
@@ -18,8 +71,16 @@ function logUpstreamFailure(
 
 export const POST = withApiHandler(async (request: NextRequest) => {
   const session = await getSession();
-  const userId = (session.user as any).id;
-  const userPlan = (session.user as any).plan || "free";
+  const sessionUser = session.user as { id?: string; plan?: string };
+  const userId = sessionUser.id;
+  const userPlan = sessionUser.plan || "free";
+
+  if (!userId) {
+    return NextResponse.json(
+      { code: "UNAUTHORIZED", message: "Please sign in to analyze symptoms." },
+      { status: 401 }
+    );
+  }
 
   const {
     symptomText,
@@ -85,7 +146,7 @@ export const POST = withApiHandler(async (request: NextRequest) => {
   }
 
   // 2. Fetch user's Prakriti context if available
-  const { data: prakritiData } = await supabase
+  const { data: prakritiData, error: prakritiError } = await supabase
     .from("prakriti_results")
     .select(
       "primary_dosha, secondary_dosha, vata_pct, pitta_pct, kapha_pct"
@@ -95,24 +156,16 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     .limit(1)
     .maybeSingle();
 
-  const userPrakriti = prakritiData
-    ? {
-        type: prakritiData.primary_dosha
-          ? prakritiData.primary_dosha.charAt(0).toUpperCase() +
-            prakritiData.primary_dosha.slice(1)
-          : "Vata",
-        primary: prakritiData.primary_dosha,
-        secondary: prakritiData.secondary_dosha,
-        percentages: {
-          Vata: prakritiData.vata_pct,
-          Pitta: prakritiData.pitta_pct,
-          Kapha: prakritiData.kapha_pct,
-        },
-      }
-    : null;
+  if (prakritiError) {
+    console.error("Symptom analysis Prakriti lookup failed:", {
+      code: prakritiError.code,
+      message: prakritiError.message,
+    });
+  }
+  const userPrakriti = normalizePrakriti(prakritiData ?? null);
 
   // 3. Call FastAPI backend
-  let backendResponse: any = null;
+  let backendResponse: Record<string, unknown> | null = null;
 
   try {
     const backendPayload = {
@@ -157,7 +210,27 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     }
 
     try {
-      backendResponse = await res.json();
+      const parsedResponse: unknown = await res.json();
+      if (
+        !isRecord(parsedResponse) ||
+        typeof parsedResponse.is_emergency !== "boolean" ||
+        typeof parsedResponse.urgency !== "string"
+      ) {
+        logUpstreamFailure({
+          endpoint: "/api/v1/analyze",
+          errorType: "InvalidResponseShape",
+        });
+
+        return NextResponse.json(
+          {
+            code: "UPSTREAM_INVALID_RESPONSE",
+            message:
+              "The analysis service returned an invalid response. Please try again shortly.",
+          },
+          { status: 503 }
+        );
+      }
+      backendResponse = parsedResponse;
     } catch (error) {
       logUpstreamFailure({
         endpoint: "/api/v1/analyze",
@@ -207,8 +280,16 @@ export const POST = withApiHandler(async (request: NextRequest) => {
 
   // 5. Store result in Supabase
   const possibleCauses = (
-    backendResponse.candidate_conditions || []
-  ).map((condition: any) => String(condition.condition));
+    Array.isArray(backendResponse.candidate_conditions)
+      ? backendResponse.candidate_conditions
+      : []
+  )
+    .map((condition) =>
+      isRecord(condition) && typeof condition.condition === "string"
+        ? condition.condition
+        : null
+    )
+    .filter((condition): condition is string => condition !== null);
 
   const { data: dbRecord, error: insertError } = await supabase
     .from("symptom_analyses")
@@ -243,13 +324,12 @@ export const POST = withApiHandler(async (request: NextRequest) => {
   await supabase.from("activity_log").insert({
     user_id: userId,
     type: "chat",
-    title: "Analyzed Symptoms via AI Vaidya & Clinical ML",
+    title:     "Analyzed Symptoms via AI Vaidya & Clinical ML",
     description: `Analyzed symptoms: "${cleanedText.substring(
       0,
       30
     )}..." (Candidate: ${
-      backendResponse.candidate_conditions?.[0]?.condition ||
-      "General"
+      possibleCauses[0] || "General"
     }).`,
   });
 

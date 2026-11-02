@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/Button/Button";
-import type { YogaPose } from "@/components/yoga/YogaPoseCoach";
+import type { YogaPoseDefinition } from "@/lib/yogaPoses";
 import { advanceBreath, advanceSession, appendPracticeHistory, formatCountdown, PRACTICE_HISTORY_KEY, readPracticeHistory, skipSessionStep } from "@/lib/yogaPractice.mjs";
 
 type HistoryEntry = { id: string; title: string; durationSeconds: number; completedAt: string };
@@ -11,7 +11,7 @@ const EMPTY_HISTORY: HistoryEntry[] = [];
 
 const BREATH_BASE = [{ name: "Inhale", seconds: 4, cue: "Breathe in gently through your nose." }, { name: "Exhale", seconds: 6, cue: "Let the breath leave slowly and comfortably." }];
 
-export function YogaPracticeStudio({ poses }: { poses: YogaPose[] }) {
+export function YogaPracticeStudio({ poses }: { poses: YogaPoseDefinition[] }) {
   const sequence = React.useMemo(() => poses.map((pose, index) => ({ ...pose, durationSeconds: index === 1 ? 30 : 40, restSeconds: index === poses.length - 1 ? 0 : 10 })), [poses]);
   const [session, setSession] = React.useState<SessionState>({ stepIndex: 0, phase: "pose", secondsRemaining: sequence[0]?.durationSeconds ?? 0, completed: false });
   const [sessionRunning, setSessionRunning] = React.useState(false);

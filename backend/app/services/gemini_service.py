@@ -19,29 +19,29 @@ REQUIRED_CARD_COUNT = 5
 
 CARD_CATEGORY_META = {
     "traditional_food": {
-        "slug": "food",
         "icon": "🍲",
         "category": "food",
+        "title": "Food and hydration",
     },
     "herbal_support": {
-        "slug": "herbal",
         "icon": "🌿",
         "category": "traditional_options",
+        "title": "Traditional options",
     },
     "daily_lifestyle": {
-        "slug": "lifestyle",
         "icon": "🌤️",
         "category": "lifestyle",
+        "title": "Daily lifestyle",
     },
     "yoga_pranayama": {
-        "slug": "yoga",
         "icon": "🧘",
         "category": "yoga",
+        "title": "Gentle movement",
     },
     "ayurvedic_wisdom": {
-        "slug": "ayurveda",
         "icon": "🌱",
         "category": "ayurvedic_perspective",
+        "title": "Traditional perspective",
     },
 }
 
@@ -220,30 +220,40 @@ def _normalize_wellness_cards(raw_cards: Any) -> List[Dict[str, Any]]:
         )
 
         details = matching_card.get("details") or ""
+        ayurvedic_context = (
+            matching_card.get("ayurvedic_context") or details
+        )
+        safety_precautions = matching_card.get("safety_precautions") or (
+            "Consult a qualified clinician if symptoms persist or worsen."
+        )
 
-        # Do not pass dosage instructions through to the user.
-        if contains_dosing_instruction(recommendation):
+        if contains_dosing_instruction(recommendation) or contains_percentage(
+            recommendation
+        ):
             recommendation = (
                 "No sufficiently supported suggestion is available. "
                 "Consult a qualified clinician."
             )
 
-        if contains_dosing_instruction(details):
-            details = ""
+        if contains_dosing_instruction(ayurvedic_context) or contains_percentage(
+            ayurvedic_context
+        ):
+            ayurvedic_context = ""
+        if contains_dosing_instruction(safety_precautions) or contains_percentage(
+            safety_precautions
+        ):
+            safety_precautions = (
+                "Consult a qualified clinician before trying new remedies or "
+                "practices."
+            )
 
         normalized_cards.append(
             {
                 "category": category,
-                "title": matching_card.get("title")
-                or category.replace("_", " ").title(),
+                "title": CARD_CATEGORY_META[category]["title"],
                 "recommendation": recommendation,
-                "ayurvedic_context": (
-                    matching_card.get("ayurvedic_context") or details
-                ),
-                "safety_precautions": (
-                    matching_card.get("safety_precautions")
-                    or "Consult a qualified clinician if symptoms persist or worsen."
-                ),
+                "ayurvedic_context": ayurvedic_context,
+                "safety_precautions": safety_precautions,
                 "citation_document_ids": (
                     matching_card.get("citation_document_ids")
                     or matching_card.get("citations")
@@ -262,6 +272,17 @@ def _normalize_wellness_cards(raw_cards: Any) -> List[Dict[str, Any]]:
 class GeminiCandidateSchema(BaseModel):
     condition: str = Field(min_length=1)
     rank: int = Field(ge=1)
+
+
+class GeminiWellnessCardSchema(BaseModel):
+    id: Optional[str] = None
+    category: Optional[str] = None
+    recommendation: str = ""
+    details: str = ""
+    ayurvedic_context: str = ""
+    safety_precautions: str = ""
+    evidence_status: str = "unavailable"
+    citation_document_ids: List[str] = Field(default_factory=list)
 
 
 class GeminiSynthesisSchema(BaseModel):
@@ -293,7 +314,7 @@ class GeminiSynthesisSchema(BaseModel):
     traditional_perspective_citations: List[str] = Field(
         default_factory=list
     )
-    wellness_cards: List[Dict[str, Any]] = Field(
+    wellness_cards: List[GeminiWellnessCardSchema] = Field(
         default_factory=list
     )
 
@@ -521,7 +542,15 @@ SAFETY RULES:
 12. If symptoms suggest an emergency, advise immediate emergency assessment.
 13. Respect the requested language. Use understandable Hindi/Hinglish for Hindi/Hinglish input.
 14. Do not provide medication instructions, doses, or individualized herbal treatment.
-15. Return valid JSON only, without Markdown fences.
+15. Treat prakriti_profile only as the user's saved traditional constitution assessment, not as
+    a diagnosis or evidence of a current Dosha imbalance. Do not infer missing profile values.
+    When the profile is absent or partial, personalize only from the values actually present.
+16. Personalize wellness guidance only when retrieved_evidence supports the connection. In each
+    card's ayurvedic_context, briefly explain the traditional relevance to the saved profile;
+    do not state that it will treat, prevent, or cure symptoms. Do not repeat profile percentages.
+17. Keep symptom triage and urgency independent of Prakriti. Never let a profile change warning
+    signs, medical urgency, or advice to seek care.
+18. Return valid JSON only, without Markdown fences.
 
 CANDIDATE CONDITIONS:
 - Return candidate_conditions as objects containing condition and rank.
@@ -534,12 +563,16 @@ CANDIDATE CONDITIONS:
 WELLNESS CARDS:
 - Return five wellness_cards in this order:
   traditional_food, herbal_support, daily_lifestyle, yoga_pranayama, ayurvedic_wisdom.
-- Each card must contain id, recommendation, details, evidence_status, citation_document_ids.
-- If evidence is insufficient, use recommendation:
-  "No sufficiently supported suggestion was retrieved for this category."
-- For unavailable cards set evidence_status to "unavailable" and citation_document_ids to [].
+- Keep these existing card headings, in order: Food and hydration, Traditional options,
+  Daily lifestyle, Gentle movement, Traditional perspective. The server applies these headings.
+- Each card must contain id, recommendation, details, ayurvedic_context, safety_precautions,
+  evidence_status, and citation_document_ids.
+- Use only relevant retrieved_evidence document_id values for citations. If no relevant evidence
+  supports a traditional recommendation, say no sufficiently supported suggestion is available,
+  set evidence_status to "unavailable", and citation_document_ids to [].
 - herbal_support is allowed only when source-grounded evidence explicitly supports traditional use.
-- Include relevant cautions and recommend consulting a qualified clinician.
+- Include relevant cautions and recommend consulting a qualified clinician. Do not give herb
+  names as individualized treatment, or suggest that Prakriti warrants taking an herb.
 - No doses, quantities, prescriptions, or guaranteed benefits.
 
 FIELD GUIDANCE:
@@ -574,6 +607,8 @@ Return exactly these fields:
       "id": "traditional_food | herbal_support | daily_lifestyle | yoga_pranayama | ayurvedic_wisdom",
       "recommendation": "string",
       "details": "string",
+      "ayurvedic_context": "string",
+      "safety_precautions": "string",
       "evidence_status": "supported | unavailable",
       "citation_document_ids": []
     }}

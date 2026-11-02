@@ -28,6 +28,7 @@ def test_gemini_receives_source_metadata_and_returns_cited_cards(monkeypatch):
         def generate_content(self, **kwargs):
             captured.update(kwargs)
             return SimpleNamespace(text=json.dumps({
+                "symptom_summary": "Reported symptoms.",
                 "dosha_imbalance": "Not established",
                 "ayurvedic_explanation": "A traditional perspective based on the retrieved passage.",
                 "evidence_grounded_summary": "Retrieved evidence was provided.",
@@ -35,27 +36,66 @@ def test_gemini_receives_source_metadata_and_returns_cited_cards(monkeypatch):
                 "warning_signs": [], "when_to_seek_care": "Seek care if worsening.",
                 "urgency": "low",
                 "ayurvedic_citation_document_ids": ["food-1"],
-                "wellness_cards": [{"id": "traditional_food", "recommendation": "Grounded food context.", "citation_document_ids": ["food-1"]}],
+                "wellness_cards": [{
+                    "id": "traditional_food",
+                    "title": "Changed heading",
+                    "recommendation": "Grounded food context.",
+                    "ayurvedic_context": "A traditional relevance statement.",
+                    "safety_precautions": "Check with a qualified clinician.",
+                    "citation_document_ids": ["food-1"],
+                }],
             }))
 
     service.client = SimpleNamespace(models=Model())
     result = service.generate_synthesis(
         symptom_text="symptoms", recognized_symptoms=["headache"], candidates=[_candidate()],
         retrieved_passages=[_passage()], body_areas=["Head"], duration="1-3 days", severity=3,
+        user_prakriti={
+            "primary": "pitta",
+            "secondary": "vata",
+            "percentages": {"vata": 30, "pitta": 50, "kapha": 20},
+        },
     )
 
     assert result["wellness_cards"][0]["citation_document_ids"] == ["food-1"]
+    assert result["wellness_cards"][0]["title"] == "Food and hydration"
     assert result["ayurvedic_citation_document_ids"] == ["food-1"]
     prompt = captured["contents"]
     assert "food-1" in prompt
     assert "AYUSH-1" in prompt
-    assert "uncalibrated_random_forest_score" in prompt
     assert '"body_areas": ["Head"]' in prompt
+    assert '"primary": "pitta"' in prompt
+    assert "Do not infer missing profile values" in prompt
 
 
-def test_fallback_leaves_cards_unavailable_for_the_endpoint_to_render():
+def test_gemini_provider_failure_uses_safe_fallback():
+    service = GeminiService()
+
+    class Model:
+        def generate_content(self, **kwargs):
+            raise RuntimeError("provider unavailable")
+
+    service.client = SimpleNamespace(models=Model())
+    result = service.generate_synthesis(
+        "symptoms", ["headache"], [], [_passage()],
+        user_prakriti={"primary": "pitta"},
+    )
+
+    assert result["generated_by"] == "fallback"
+    assert len(result["wellness_cards"]) == 5
+    assert result["herbs"] == []
+
+
+def test_fallback_returns_generic_cards_without_applying_prakriti():
     service = GeminiService()
     service.client = None
-    result = service.generate_synthesis("symptoms", ["headache"], [_candidate()], [_passage()])
-    assert result["wellness_cards"] == []
+    result = service.generate_synthesis(
+        "symptoms",
+        ["headache"],
+        [_candidate()],
+        [_passage()],
+        user_prakriti={"primary": "pitta"},
+    )
+    assert len(result["wellness_cards"]) == 5
+    assert "pitta" not in json.dumps(result["wellness_cards"]).lower()
     assert result["herbs"] == []

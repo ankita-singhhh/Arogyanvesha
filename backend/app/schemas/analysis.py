@@ -1,8 +1,37 @@
 # backend/app/schemas/analysis.py
 
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, model_validator
+
+
+Dosha = Literal["vata", "pitta", "kapha"]
+
+
+class PrakritiPercentages(BaseModel):
+    vata: int = Field(ge=0, le=100)
+    pitta: int = Field(ge=0, le=100)
+    kapha: int = Field(ge=0, le=100)
+
+    @model_validator(mode="after")
+    def percentages_total_one_hundred(self):
+        if self.vata + self.pitta + self.kapha != 100:
+            raise ValueError("Prakriti percentages must total 100.")
+        return self
+
+
+class PrakritiProfile(BaseModel):
+    primary: Optional[Dosha] = None
+    secondary: Optional[Dosha] = None
+    percentages: Optional[PrakritiPercentages] = None
+
+    @model_validator(mode="after")
+    def validate_profile(self):
+        if self.primary and self.primary == self.secondary:
+            raise ValueError("Primary and secondary Dosha must differ.")
+        if not any((self.primary, self.secondary, self.percentages)):
+            raise ValueError("Prakriti profile must contain validated data.")
+        return self
 
 class AnalysisRequest(BaseModel):
     model_config = ConfigDict(
@@ -17,7 +46,7 @@ class AnalysisRequest(BaseModel):
     symptom_chips: list[str] = Field(default_factory=list)
     age: Optional[int] = None
     language: str = "auto"
-    user_prakriti: Optional[str] = None
+    user_prakriti: Optional[PrakritiProfile] = None
     duration: Optional[str] = None
     severity: Optional[int] = None
     body_areas: list[str] = Field(default_factory=list)

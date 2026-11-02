@@ -89,28 +89,54 @@ def _passages_by_identifier(retrieved_passages):
     return passages_by_id
 
 
-def _build_wellness_cards(retrieved_passages, generated_cards):
+def _build_wellness_cards(retrieved_passages, generated_cards=None):
     """Turn the validated generated cards into response cards.
 
     Cards are general traditional wellness education. A citation is attached only
     when it resolves to a source-grounded passage that was actually retrieved, so
-    a card with no valid citation is shown without a source rather than with an
-    invented one. (evidence_status keeps its existing values: "supported" when a
-    source is attached, otherwise "unavailable".)
+    a card with no category-matched grounded citation uses the existing generic
+    fallback rather than presenting uncited generated advice. (evidence_status
+    remains "supported" only when a source is attached.)
     """
     passages_by_id = _passages_by_identifier(
         _deduplicate_passages(retrieved_passages)
     )
+    fallback_cards = {
+        card["category"]: card for card in get_fallback_wellness_cards()
+    }
+    generated_by_category = {}
+    for generated in generated_cards or []:
+        category = generated.get("category") or generated.get("id")
+        if (
+            isinstance(category, str)
+            and category in CARD_CATEGORY_META
+            and category not in generated_by_category
+        ):
+            generated_by_category[category] = generated
+
     cards = []
-    for index, generated in enumerate(generated_cards, start=1):
-        category = generated["category"]
-        meta = CARD_CATEGORY_META[category]
+    for category, meta in CARD_CATEGORY_META.items():
+        generated = generated_by_category.get(category, fallback_cards[category])
+        allowed_evidence_categories = {
+            "traditional_food": {"food"},
+            "herbal_support": {
+                "traditional_options",
+                "complementary_options",
+            },
+            "daily_lifestyle": {"lifestyle", "home_support"},
+            "yoga_pranayama": {"yoga", "yoga_safety"},
+            "ayurvedic_wisdom": {"ayurvedic_perspective", "prakriti"},
+        }[category]
         cited_passages = []
         seen = set()
 
         for doc_id in generated.get("citation_document_ids") or []:
             passage = passages_by_id.get(str(doc_id).strip())
-            if not passage or not passage.source_grounded:
+            if (
+                not passage
+                or not passage.source_grounded
+                or passage.category not in allowed_evidence_categories
+            ):
                 continue
             if str(passage.document_id) in seen:
                 continue
@@ -131,17 +157,32 @@ def _build_wellness_cards(retrieved_passages, generated_cards):
                 if passage.url
             )
         )
+        fallback = fallback_cards[category]
+        has_grounded_citations = bool(citations)
+        recommendation = (
+            generated.get("recommendation") if has_grounded_citations else None
+        ) or fallback["recommendation"]
+        ayurvedic_context = (
+            generated.get("ayurvedic_context")
+            if has_grounded_citations
+            else None
+        ) or fallback["ayurvedic_context"]
+        safety_precautions = (
+            generated.get("safety_precautions")
+            if has_grounded_citations
+            else None
+        ) or fallback["safety_precautions"]
 
         cards.append(
             WellnessCard(
-                id=f"{meta['slug']}_{index}",
-                title=generated["title"],
+                id=category,
+                title=meta["title"],
                 icon=meta["icon"],
                 category=category,
-                recommendation=generated["recommendation"],
-                ayurvedic_context=generated["ayurvedic_context"],
-                safety_precautions=generated["safety_precautions"],
-                details=generated["ayurvedic_context"],
+                recommendation=recommendation,
+                ayurvedic_context=ayurvedic_context,
+                safety_precautions=safety_precautions,
+                details=ayurvedic_context,
                 evidence_status="supported" if citations else "unavailable",
                 citations=citations,
                 citation_urls=urls,
@@ -386,7 +427,11 @@ def analyze_symptoms(request: AnalysisRequest):
             recognized_symptoms=canonical_symptoms,
             candidates=[],  # Legacy argument; RF candidates are disabled.
             retrieved_passages=retrieved_passages,
-            user_prakriti=request.user_prakriti,
+            user_prakriti=(
+                request.user_prakriti.model_dump(exclude_none=True)
+                if request.user_prakriti
+                else None
+            ),
             duration=request.duration,
             severity=request.severity,
             language=request.language or "auto",
