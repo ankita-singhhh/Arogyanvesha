@@ -20,7 +20,6 @@ type DoshaBalance = {
   kapha: number;
 };
 
-
 type BackendPrakritiResult = {
   primary_dosha?: Dosha;
   secondary_dosha?: Dosha | null;
@@ -245,6 +244,7 @@ function DoshaBalanceChart({ balance }: { balance: DoshaBalance }) {
 export default function PrakritiResultPage() {
   const { result, setResult } = usePrakritiStore();
   const [isLoading, setIsLoading] = React.useState(true);
+  const [hasResultError, setHasResultError] = React.useState(false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -258,13 +258,15 @@ export default function PrakritiResultPage() {
 
         if (normalized) {
           setResult(normalized);
+          setHasResultError(false);
         } else {
-          setResult(null);
+          setHasResultError(true);
         }
       } catch (error) {
         if (cancelled) return;
+
         console.error("Failed to load Prakriti result:", error);
-        setResult(null);
+        setHasResultError(true);
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -281,7 +283,7 @@ export default function PrakritiResultPage() {
     return <RouteLoading />;
   }
 
-  if (!result) {
+  if (hasResultError || !result) {
     return (
       <PageContainer className="py-16">
         <EmptyState
@@ -471,10 +473,7 @@ export default function PrakritiResultPage() {
                 </h3>
                 <ul className="flex flex-col gap-3">
                   {section.items.map((item) => (
-                    <li
-                      key={item}
-                      className="text-body-sm text-text-body"
-                    >
+                    <li key={item} className="text-body-sm text-text-body">
                       • {item}
                     </li>
                   ))}
@@ -548,7 +547,7 @@ function ContentList({
             className="flex items-center gap-2.5 text-body-sm text-text-body"
           >
             <span
-              className={cn("h-1.5 w-1.5 shrink-0 rounded-full")}
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
               style={{ background: color }}
             />
             {item}
