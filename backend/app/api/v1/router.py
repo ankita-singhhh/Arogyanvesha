@@ -8,10 +8,17 @@ from app.api.v1.endpoints import (
     predict,
     rag,
     symptoms,
+    yoga,
 )
 
 api_router = APIRouter(prefix="/api/v1")
+# ...existing routers...
 
+api_router.include_router(
+    yoga.router,
+    prefix="/yoga",
+    tags=["yoga"],
+)
 api_router.include_router(
     prakriti.router,
     prefix="/prakriti",
