@@ -110,7 +110,7 @@ export default function PrakritiAnalyzingPage() {
           id: serverResult.id,
           userId: currentUserId,
           primaryDosha,
-          secondaryDosha,
+          secondaryDosha: secondaryDosha ?? primaryDosha,
           balance: {
             vata: serverResult.vataPct,
             pitta: serverResult.pittaPct,
