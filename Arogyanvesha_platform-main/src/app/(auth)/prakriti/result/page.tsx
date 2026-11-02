@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/Badge";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { RouteLoading } from "@/components/ui/RouteLoading";
-import type { Dosha } from "@/types";
+import type { Dosha, PrakritiResult } from "@/types";
 
 type DoshaBalance = {
   vata: number;
@@ -20,12 +20,6 @@ type DoshaBalance = {
   kapha: number;
 };
 
-type PrakritiResult = {
-  primaryDosha: Dosha;
-  secondaryDosha: Dosha;
-  balance: DoshaBalance;
-  completedAt: string;
-};
 
 type BackendPrakritiResult = {
   primary_dosha?: Dosha;
@@ -169,7 +163,9 @@ const DOSHA_CONTENT: Record<
   },
 };
 
-function normalizeResult(data: BackendPrakritiResult): PrakritiResult | null {
+function normalizeResult(
+  data: BackendPrakritiResult
+): PrakritiResult | null {
   const primaryDosha = data.primaryDosha ?? data.primary_dosha;
   const secondaryDosha =
     data.secondaryDosha ?? data.secondary_dosha ?? primaryDosha;
@@ -190,6 +186,8 @@ function normalizeResult(data: BackendPrakritiResult): PrakritiResult | null {
   const total = vata + pitta + kapha;
 
   return {
+    id: "anonymous",
+    userId: "anonymous",
     primaryDosha,
     secondaryDosha,
     balance: {
@@ -198,6 +196,7 @@ function normalizeResult(data: BackendPrakritiResult): PrakritiResult | null {
       kapha: total > 0 ? Math.round((kapha / total) * 100) : 0,
     },
     completedAt: data.completedAt ?? new Date().toISOString(),
+    recommendations: [],
   };
 }
 
