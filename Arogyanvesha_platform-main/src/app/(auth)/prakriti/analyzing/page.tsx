@@ -246,7 +246,7 @@ export default function PrakritiAnalyzingPage() {
                   strokeWidth="1"
                   fill="currentColor"
                   fillOpacity="0.03"
-                  transform={`rotate(${angle} 50 50)`}
+                  transform={"rotate(" + angle + " 50 50)"}
                 />
               ))}
 
