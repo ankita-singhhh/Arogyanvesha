@@ -29,13 +29,13 @@ const STEPS = [
 ];
 
 interface PrakritiSubmitResponse {
-  id: string;
-  primaryDosha: string;
-  secondaryDosha: string | null;
-  vataPct: number;
-  pittaPct: number;
-  kaphaPct: number;
-  completedAt?: string;
+  primary_dosha: string;
+  secondary_dosha: string | null;
+  scores: {
+    vata: number;
+    pitta: number;
+    kapha: number;
+  };
 }
 
 const VALID_DOSHAS: readonly Dosha[] = ["vata", "pitta", "kapha"];
@@ -75,17 +75,15 @@ export default function PrakritiAnalyzingPage() {
 
         const serverResult = response.data;
 
-        // Normalize API values so "Vata" and "vata" both work.
-        const primaryDosha = normalizeDosha(serverResult.primaryDosha);
+        const primaryDosha = normalizeDosha(serverResult.primary_dosha);
         const secondaryDosha =
-          serverResult.secondaryDosha === null
+          serverResult.secondary_dosha === null
             ? null
-            : normalizeDosha(serverResult.secondaryDosha);
+            : normalizeDosha(serverResult.secondary_dosha);
 
-        // Validate the values against the Dosha type.
         if (!isDosha(primaryDosha)) {
           throw new Error(
-            `Invalid primary dosha received: ${serverResult.primaryDosha}`
+            `Invalid primary dosha received: ${serverResult.primary_dosha}`
           );
         }
 
@@ -94,9 +92,20 @@ export default function PrakritiAnalyzingPage() {
           !isDosha(secondaryDosha)
         ) {
           throw new Error(
-            `Invalid secondary dosha received: ${serverResult.secondaryDosha}`
+            `Invalid secondary dosha received: ${serverResult.secondary_dosha}`
           );
         }
+
+        const { vata, pitta, kapha } = serverResult.scores;
+        const totalScore = vata + pitta + kapha;
+
+        if (totalScore <= 0) {
+          throw new Error("The API returned empty Prakriti scores.");
+        }
+
+        const vataPct = Math.round((vata / totalScore) * 100);
+        const pittaPct = Math.round((pitta / totalScore) * 100);
+        const kaphaPct = 100 - vataPct - pittaPct;
 
         // Keep the animation visible for at least 5.5 seconds.
         await new Promise((resolve) => setTimeout(resolve, 5500));
@@ -107,17 +116,16 @@ export default function PrakritiAnalyzingPage() {
           useAuthStore.getState().user?.id || "anonymous";
 
         const calculatedResult: PrakritiResult = {
-          id: serverResult.id,
+          id: crypto.randomUUID(),
           userId: currentUserId,
           primaryDosha,
           secondaryDosha: secondaryDosha ?? primaryDosha,
           balance: {
-            vata: serverResult.vataPct,
-            pitta: serverResult.pittaPct,
-            kapha: serverResult.kaphaPct,
+            vata: vataPct,
+            pitta: pittaPct,
+            kapha: kaphaPct,
           },
-          completedAt:
-            serverResult.completedAt || new Date().toISOString(),
+          completedAt: new Date().toISOString(),
           recommendations: [],
         };
 
@@ -190,16 +198,13 @@ export default function PrakritiAnalyzingPage() {
   return (
     <div className="min-h-screen bg-bg-base flex flex-col items-center justify-center p-6 overflow-hidden">
       <div className="w-full max-w-md flex flex-col items-center text-center">
-        {/* Animated Mandala Container */}
         <div className="relative w-44 h-44 mb-10 flex items-center justify-center">
-          {/* Outer glow ring */}
           <motion.div
             className="absolute inset-0 rounded-full border border-brand-gold/10"
             variants={prakritiAnalyzing as any}
             animate="pulse"
           />
 
-          {/* Rotating Mandala */}
           <motion.div
             className="w-36 h-36 relative select-none pointer-events-none"
             variants={prakritiAnalyzing as any}
@@ -256,7 +261,6 @@ export default function PrakritiAnalyzingPage() {
           </motion.div>
         </div>
 
-        {/* Dynamic loading text */}
         <h2 className="text-h2 font-display font-bold text-text-heading mb-4">
           Discovering Your Prakriti
         </h2>
@@ -266,7 +270,6 @@ export default function PrakritiAnalyzingPage() {
           moment.
         </p>
 
-        {/* Processing steps */}
         <div className="w-full bg-surface-card border border-border-default rounded-2xl p-5 flex flex-col gap-4 text-left shadow-sm">
           {STEPS.map((step, idx) => (
             <motion.div
