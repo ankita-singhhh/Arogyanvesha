@@ -1,9 +1,9 @@
-
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
     analyze,
     chat,
+    conversations,  # Add this import
     prakriti,
     predict,
     rag,
@@ -14,13 +14,13 @@ from app.api.v1.endpoints import (
 )
 
 api_router = APIRouter(prefix="/api/v1")
-# ...existing routers...
 
 api_router.include_router(
     yoga.router,
     prefix="/yoga",
     tags=["yoga"],
 )
+
 api_router.include_router(
     wisdom.router,
     prefix="/wisdom",
@@ -32,10 +32,18 @@ api_router.include_router(
     prefix="/herbs",
     tags=["Herbs"],
 )
+
 api_router.include_router(
     prakriti.router,
     prefix="/prakriti",
     tags=["Prakriti"],
+)
+
+# Add conversations router
+api_router.include_router(
+    conversations.router,
+    prefix="/chat/conversations",
+    tags=["Conversations"],
 )
 
 api_router.include_router(
