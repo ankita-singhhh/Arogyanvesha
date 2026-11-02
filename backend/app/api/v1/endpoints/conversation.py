@@ -9,24 +9,33 @@ from app.schemas.chat import ChatRequest
 
 router = APIRouter()
 
+DEFAULT_TITLE = "New consultation"
 
-# ─────────────────────────────────────────────────────────
-# Auth placeholder
-# TODO: replace with your real "current user" dependency so each
-# user only sees their own conversations. Until then everyone is
-# the same user, which is fine for testing but NOT for production.
-# ─────────────────────────────────────────────────────────
+# Temporary in-memory storage. Data is lost on Render restart.
+CONVERSATIONS: dict[str, dict] = {}
+MESSAGES: dict[str, list[dict]] = {}
+
 
 def get_current_user_id() -> str:
+    # TODO: Replace with your real authentication dependency.
     return "anonymous"
 
 
-# ─────────────────────────────────────────────────────────
-# Schemas (snake_case, matching what the frontend reads)
-# ─────────────────────────────────────────────────────────
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _get_owned_conversation(conversation_id: str, user_id: str) -> dict:
+    conversation = CONVERSATIONS.get(conversation_id)
+
+    if not conversation or conversation["user_id"] != user_id:
+        raise HTTPException(status_code=404, detail="Conversation not found.")
+
+    return conversation
+
 
 class ConversationCreate(BaseModel):
-    title: str = Field(default="New consultation", max_length=200)
+    title: str = Field(default=DEFAULT_TITLE, max_length=200)
 
 
 class ConversationOut(BaseModel):
@@ -52,43 +61,28 @@ class MessageOut(BaseModel):
     confidence: str | None = None
 
 
-# ─────────────────────────────────────────────────────────
-# Temporary in-memory store
-# Wiped on every Render restart/redeploy. Replace with your database.
-# ─────────────────────────────────────────────────────────
-
-CONVERSATIONS: dict[str, dict] = {}
-MESSAGES: dict[str, list[dict]] = {}
-
-DEFAULT_TITLE = "New consultation"
-
-
-def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def _get_owned_conversation(conversation_id: str, user_id: str) -> dict:
-    conversation = CONVERSATIONS.get(conversation_id)
-    if not conversation or conversation["user_id"] != user_id:
-        raise HTTPException(status_code=404, detail="Conversation not found.")
-    return conversation
-
-
-# ─────────────────────────────────────────────────────────
-# Routes (mounted at /api/v1/chat/conversations)
-# ─────────────────────────────────────────────────────────
-
 @router.get("", response_model=list[ConversationOut])
 def list_conversations():
     user_id = get_current_user_id()
-    mine = [c for c in CONVERSATIONS.values() if c["user_id"] == user_id]
-    mine.sort(key=lambda c: c["last_message_at"] or c["created_at"], reverse=True)
-    return mine
+
+    conversations = [
+        conversation
+        for conversation in CONVERSATIONS.values()
+        if conversation["user_id"] == user_id
+    ]
+
+    conversations.sort(
+        key=lambda item: item["last_message_at"] or item["created_at"],
+        reverse=True,
+    )
+
+    return conversations
 
 
 @router.post("", response_model=ConversationOut)
 def create_conversation(request: ConversationCreate):
     user_id = get_current_user_id()
+
     conversation = {
         "id": str(uuid.uuid4()),
         "user_id": user_id,
@@ -98,37 +92,49 @@ def create_conversation(request: ConversationCreate):
         "created_at": _now(),
         "last_message_at": None,
     }
+
     CONVERSATIONS[conversation["id"]] = conversation
     MESSAGES[conversation["id"]] = []
+
     return conversation
 
 
 @router.get("/{conversation_id}/messages", response_model=list[MessageOut])
 def list_messages(conversation_id: str):
-    _get_owned_conversation(conversation_id, get_current_user_id())
+    _get_owned_conversation(
+        conversation_id,
+        get_current_user_id(),
+    )
+
     return MESSAGES.get(conversation_id, [])
 
 
 @router.post("/{conversation_id}/messages", response_model=MessageOut)
 def send_message(conversation_id: str, request: MessageIn):
     conversation = _get_owned_conversation(
-        conversation_id, get_current_user_id()
+        conversation_id,
+        get_current_user_id(),
     )
-    history = MESSAGES.setdefault(conversation_id, [])
+
     text = request.content.strip()
+
     if not text:
-        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty.",
+        )
 
-    # Build the model input from recent history plus the new user message.
-    # If the AI call fails, nothing has been saved yet, so retrying is clean.
-    recent = [
-        {"role": m["role"], "content": m["content"]} for m in history[-9:]
+    history = MESSAGES.setdefault(conversation_id, [])
+
+    recent_messages = [
+        {"role": message["role"], "content": message["content"]}
+        for message in history[-9:]
     ]
-    recent.append({"role": "user", "content": text})
+    recent_messages.append({"role": "user", "content": text})
 
-    # Reuses the existing AI Vaidya logic (emergency check, RAG, Gemini).
-    # Raises HTTPException(503) if the AI is unavailable.
-    ai_response = chat_with_ai_vaidya(ChatRequest(messages=recent))
+    ai_response = chat_with_ai_vaidya(
+        ChatRequest(messages=recent_messages)
+    )
 
     user_message = {
         "id": str(uuid.uuid4()),
@@ -138,6 +144,7 @@ def send_message(conversation_id: str, request: MessageIn):
         "created_at": _now(),
         "confidence": None,
     }
+
     assistant_message = {
         "id": str(uuid.uuid4()),
         "conversation_id": conversation_id,
@@ -146,11 +153,12 @@ def send_message(conversation_id: str, request: MessageIn):
         "created_at": _now(),
         "confidence": getattr(ai_response, "confidence", None),
     }
+
     history.extend([user_message, assistant_message])
 
-    # Update conversation summary fields.
     if conversation["title"] == DEFAULT_TITLE:
         conversation["title"] = text[:50] + ("…" if len(text) > 50 else "")
+
     conversation["last_message"] = ai_response.reply[:80]
     conversation["message_count"] = len(history)
     conversation["last_message_at"] = assistant_message["created_at"]
