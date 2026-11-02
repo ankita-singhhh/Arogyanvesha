@@ -90,7 +90,7 @@ export default function WisdomPage() {
             tags: Array.isArray(article.tags) ? article.tags : [],
             readTimeMinutes: article.read_time_minutes ?? 0,
             imageUrl: article.image_url ?? undefined,
-            publishedAt: article.published_at ?? article.created_at ?? undefined,
+            publishedAt: article.published_at ?? article.created_at ?? "",
           }));
 
           setArticles(mappedArticles);
@@ -209,9 +209,7 @@ export default function WisdomPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() =>
-                    setVisibleCount((count) => count + PAGE_SIZE)
-                  }
+                  onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
                 >
                   Show more
                 </Button>
