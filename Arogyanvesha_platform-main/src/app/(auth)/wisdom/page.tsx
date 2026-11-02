@@ -21,8 +21,28 @@ const CATEGORIES = [
   { value: "Traditional Wellness Practices", label: "Traditional Wellness Practices" },
 ];
 
-const PAGE_SIZE = 24; // cards shown at first, and added by each "Show more"
-const FETCH_LIMIT = 100; // most articles requested from the API at once
+const PAGE_SIZE = 24;
+const FETCH_LIMIT = 100;
+
+type WisdomApiArticle = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string | null;
+  content?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+  read_time_minutes?: number | null;
+  image_url?: string | null;
+  published_at?: string | null;
+  created_at?: string | null;
+};
+
+type WisdomApiResponse =
+  | WisdomApiArticle[]
+  | {
+      articles?: WisdomApiArticle[];
+    };
 
 export default function WisdomPage() {
   const [selectedCategory, setSelectedCategory] = React.useState("");
@@ -38,34 +58,52 @@ export default function WisdomPage() {
       setError(null);
 
       const params = new URLSearchParams();
-      if (search) params.append("search", search);
-      if (selectedCategory) params.append("category", selectedCategory);
-      // Ask for up to 100. Change "limit" if your backend names it differently
-      // (for example per_page or page_size).
+
+      if (search.trim()) {
+        params.append("search", search.trim());
+      }
+
+      if (selectedCategory) {
+        params.append("category", selectedCategory);
+      }
+
       params.append("limit", String(FETCH_LIMIT));
+
       const endpoint = `/wisdom/articles?${params.toString()}`;
 
       api
-        .get<any[]>(endpoint)
+        .get<WisdomApiResponse>(endpoint)
         .then(({ data }) => {
-          setArticles(
-            (data ?? []).map((a) => ({
-              id: a.id,
-              slug: a.slug,
-              title: a.title,
-              excerpt: a.excerpt ?? "",
-              content: a.content ?? "",
-              category: a.category ?? "",
-              tags: Array.isArray(a.tags) ? a.tags : [],
-              readTimeMinutes: a.read_time_minutes ?? 0,
-              imageUrl: a.image_url,
-              publishedAt: a.published_at ?? a.created_at,
-            })),
-          );
+          const articleList: WisdomApiArticle[] = Array.isArray(data)
+            ? data
+            : Array.isArray(data?.articles)
+              ? data.articles
+              : [];
+
+          const mappedArticles: WisdomArticle[] = articleList.map((article) => ({
+            id: article.id,
+            slug: article.slug,
+            title: article.title,
+            excerpt: article.excerpt ?? "",
+            content: article.content ?? "",
+            category: article.category ?? "",
+            tags: Array.isArray(article.tags) ? article.tags : [],
+            readTimeMinutes: article.read_time_minutes ?? 0,
+            imageUrl: article.image_url ?? undefined,
+            publishedAt: article.published_at ?? article.created_at ?? undefined,
+          }));
+
+          setArticles(mappedArticles);
           setVisibleCount(PAGE_SIZE);
         })
-        .catch(() => setError("Wisdom articles are temporarily unavailable."))
-        .finally(() => setLoading(false));
+        .catch((err) => {
+          console.error("Failed to fetch Wisdom articles:", err);
+          setArticles([]);
+          setError("Wisdom articles are temporarily unavailable.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }, 250);
 
     return () => clearTimeout(timer);
@@ -76,7 +114,10 @@ export default function WisdomPage() {
   return (
     <PageContainer className="py-8">
       <div className="mx-auto max-w-6xl">
-        <h1 className="text-h1 font-display font-bold text-text-heading">Ayurvedic Wisdom</h1>
+        <h1 className="text-h1 font-display font-bold text-text-heading">
+          Ayurvedic Wisdom
+        </h1>
+
         <p className="mt-1 text-body text-text-muted">
           Published educational articles from the Arogyanvesha knowledge library.
         </p>
@@ -88,6 +129,7 @@ export default function WisdomPage() {
             placeholder="Search articles…"
             isLoading={loading}
           />
+
           <Select
             options={CATEGORIES}
             placeholder="All Categories"
@@ -123,7 +165,6 @@ export default function WisdomPage() {
                   className="flex flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-card transition hover:border-brand-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-gold"
                 >
                   {article.imageUrl && (
-                    // Plain <img> so any image host works without extra Next.js config.
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={article.imageUrl}
@@ -132,12 +173,20 @@ export default function WisdomPage() {
                       className="h-40 w-full object-cover"
                     />
                   )}
+
                   <div className="flex flex-1 flex-col p-5">
                     <p className="text-label text-text-muted">
                       {article.category} · {article.readTimeMinutes} min read
                     </p>
-                    <h2 className="mt-2 text-h4 font-semibold text-text-heading">{article.title}</h2>
-                    <p className="mt-3 line-clamp-3 text-body-sm text-text-muted">{article.excerpt}</p>
+
+                    <h2 className="mt-2 text-h4 font-semibold text-text-heading">
+                      {article.title}
+                    </h2>
+
+                    <p className="mt-3 line-clamp-3 text-body-sm text-text-muted">
+                      {article.excerpt}
+                    </p>
+
                     {article.tags.length > 0 && (
                       <ul className="mt-4 flex flex-wrap gap-2">
                         {article.tags.slice(0, 3).map((tag) => (
@@ -160,7 +209,9 @@ export default function WisdomPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+                  onClick={() =>
+                    setVisibleCount((count) => count + PAGE_SIZE)
+                  }
                 >
                   Show more
                 </Button>
