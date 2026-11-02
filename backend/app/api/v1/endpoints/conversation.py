@@ -11,13 +11,13 @@ router = APIRouter()
 
 DEFAULT_TITLE = "New consultation"
 
-# Temporary in-memory storage. Data is lost on Render restart.
+# Temporary in-memory storage. Data is lost on Render restarts.
 CONVERSATIONS: dict[str, dict] = {}
 MESSAGES: dict[str, list[dict]] = {}
 
 
 def get_current_user_id() -> str:
-    # TODO: Replace with your real authentication dependency.
+    # TODO: Replace with real authentication.
     return "anonymous"
 
 
@@ -66,16 +66,13 @@ def list_conversations():
     user_id = get_current_user_id()
 
     conversations = [
-        conversation
-        for conversation in CONVERSATIONS.values()
-        if conversation["user_id"] == user_id
+        c for c in CONVERSATIONS.values()
+        if c["user_id"] == user_id
     ]
-
     conversations.sort(
-        key=lambda item: item["last_message_at"] or item["created_at"],
+        key=lambda c: c["last_message_at"] or c["created_at"],
         reverse=True,
     )
-
     return conversations
 
 
@@ -95,17 +92,12 @@ def create_conversation(request: ConversationCreate):
 
     CONVERSATIONS[conversation["id"]] = conversation
     MESSAGES[conversation["id"]] = []
-
     return conversation
 
 
 @router.get("/{conversation_id}/messages", response_model=list[MessageOut])
 def list_messages(conversation_id: str):
-    _get_owned_conversation(
-        conversation_id,
-        get_current_user_id(),
-    )
-
+    _get_owned_conversation(conversation_id, get_current_user_id())
     return MESSAGES.get(conversation_id, [])
 
 
@@ -117,24 +109,17 @@ def send_message(conversation_id: str, request: MessageIn):
     )
 
     text = request.content.strip()
-
     if not text:
-        raise HTTPException(
-            status_code=400,
-            detail="Message cannot be empty.",
-        )
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
 
     history = MESSAGES.setdefault(conversation_id, [])
-
-    recent_messages = [
-        {"role": message["role"], "content": message["content"]}
-        for message in history[-9:]
+    recent = [
+        {"role": m["role"], "content": m["content"]}
+        for m in history[-9:]
     ]
-    recent_messages.append({"role": "user", "content": text})
+    recent.append({"role": "user", "content": text})
 
-    ai_response = chat_with_ai_vaidya(
-        ChatRequest(messages=recent_messages)
-    )
+    ai_response = chat_with_ai_vaidya(ChatRequest(messages=recent))
 
     user_message = {
         "id": str(uuid.uuid4()),
@@ -144,7 +129,6 @@ def send_message(conversation_id: str, request: MessageIn):
         "created_at": _now(),
         "confidence": None,
     }
-
     assistant_message = {
         "id": str(uuid.uuid4()),
         "conversation_id": conversation_id,
