@@ -4,59 +4,204 @@ import { supabase } from "@/lib/supabase";
 import { withApiHandler } from "@/lib/api/withApiHandler";
 import type { Dosha } from "@/types";
 
+type SubmittedAnswer = {
+  questionId: number;
+  selectedOptionId: string;
+};
+
+type VerifiedAnswer = {
+  questionId: number;
+  selectedOptionId: string;
+  dosha: Dosha;
+};
+
+const VALID_DOSHAS: Dosha[] = ["vata", "pitta", "kapha"];
+
 export const POST = withApiHandler(async (request: NextRequest) => {
+  // 1. Authenticate user
   const session = await getSession();
-  const userId = (session.user as any).id;
+  const userId = (session.user as { id: string }).id;
 
-  const { answers } = await request.json();
-
-  if (!answers || !Array.isArray(answers) || answers.length === 0) {
-    return NextResponse.json({ code: "BAD_REQUEST", message: "Please provide valid answers." }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json(
+      { code: "UNAUTHORIZED", message: "Please sign in to submit the assessment." },
+      { status: 401 }
+    );
   }
 
-  const optionIds = answers.map((answer) => answer?.selectedOptionId).filter((id): id is string => typeof id === "string");
-  if (optionIds.length !== answers.length || new Set(optionIds).size !== optionIds.length) {
-    return NextResponse.json({ code: "BAD_REQUEST", message: "Assessment answers are invalid." }, { status: 400 });
+  // 2. Parse and validate request body
+  let body: { answers?: unknown };
+
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { code: "BAD_REQUEST", message: "Request body must be valid JSON." },
+      { status: 400 }
+    );
   }
 
-  // The client only identifies selected options. Dosha values and question mapping
-  // are resolved from the assessment tables so a client cannot forge a result.
+  const answers = body?.answers;
+
+  if (!Array.isArray(answers) || answers.length === 0) {
+    return NextResponse.json(
+      { code: "BAD_REQUEST", message: "Please provide valid answers." },
+      { status: 400 }
+    );
+  }
+
+  const submittedAnswers: SubmittedAnswer[] = [];
+
+  for (const answer of answers) {
+    if (
+      !answer ||
+      !Number.isInteger(answer.questionId) ||
+      typeof answer.selectedOptionId !== "string" ||
+      answer.selectedOptionId.trim().length === 0
+    ) {
+      return NextResponse.json(
+        {
+          code: "BAD_REQUEST",
+          message:
+            "Each answer must contain a numeric questionId and a selectedOptionId.",
+        },
+        { status: 400 }
+      );
+    }
+
+    submittedAnswers.push({
+      questionId: answer.questionId,
+      selectedOptionId: answer.selectedOptionId.trim(),
+    });
+  }
+
+  const optionIds = submittedAnswers.map((answer) => answer.selectedOptionId);
+  const questionIds = submittedAnswers.map((answer) => answer.questionId);
+
+  if (
+    new Set(optionIds).size !== optionIds.length ||
+    new Set(questionIds).size !== questionIds.length
+  ) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "Each question must have exactly one unique selected option.",
+      },
+      { status: 400 }
+    );
+  }
+
+  // 3. Verify selected options against Supabase
   const { data: options, error: optionsError } = await supabase
     .from("prakriti_options")
     .select("id, question_id, dosha")
     .in("id", optionIds);
 
-  if (optionsError || !options || options.length !== optionIds.length) {
-    return NextResponse.json({ code: "BAD_REQUEST", message: "Assessment answers could not be verified." }, { status: 400 });
+  if (optionsError) {
+    console.error("Prakriti option lookup failed:", {
+      message: optionsError.message,
+      code: optionsError.code,
+      details: optionsError.details,
+      hint: optionsError.hint,
+    });
+
+    return NextResponse.json(
+      {
+        code: "OPTION_LOOKUP_FAILED",
+        message: "Could not verify assessment options. Please try again.",
+      },
+      { status: 500 }
+    );
+  }
+
+  if (!options || options.length !== optionIds.length) {
+    const foundIds = new Set((options ?? []).map((option) => option.id));
+    const missingOptionIds = optionIds.filter((id) => !foundIds.has(id));
+
+    console.error("Prakriti option verification failed:", {
+      submittedCount: optionIds.length,
+      returnedCount: options?.length ?? 0,
+      missingOptionIds,
+    });
+
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "Some selected options could not be found. Please reload the assessment and try again.",
+      },
+      { status: 400 }
+    );
   }
 
   const optionsById = new Map(options.map((option) => [option.id, option]));
-  const verifiedAnswers = answers.map((answer) => {
-    const option = optionsById.get(answer.selectedOptionId);
-    if (!option || option.question_id !== answer.questionId) return null;
-    return { questionId: option.question_id, selectedOptionId: option.id, dosha: option.dosha as Dosha };
-  });
 
-  if (verifiedAnswers.some((answer) => !answer)) {
-    return NextResponse.json({ code: "BAD_REQUEST", message: "Assessment answers do not match the questionnaire." }, { status: 400 });
+  // 4. Verify option/question relationship and dosha values
+  const verifiedAnswers: VerifiedAnswer[] = [];
+
+  for (const answer of submittedAnswers) {
+    const option = optionsById.get(answer.selectedOptionId);
+
+    if (!option || Number(option.question_id) !== answer.questionId) {
+      console.error("Prakriti question-option mismatch:", {
+        submittedQuestionId: answer.questionId,
+        selectedOptionId: answer.selectedOptionId,
+        databaseQuestionId: option?.question_id,
+      });
+
+      return NextResponse.json(
+        {
+          code: "BAD_REQUEST",
+          message: "An answer does not match its question. Please reload the assessment.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const dosha = String(option.dosha).toLowerCase() as Dosha;
+
+    if (!VALID_DOSHAS.includes(dosha)) {
+      console.error("Invalid dosha value in prakriti_options:", {
+        optionId: option.id,
+        dosha: option.dosha,
+      });
+
+      return NextResponse.json(
+        {
+          code: "INVALID_ASSESSMENT_DATA",
+          message: "The assessment contains invalid option data.",
+        },
+        { status: 500 }
+      );
+    }
+
+    verifiedAnswers.push({
+      questionId: answer.questionId,
+      selectedOptionId: answer.selectedOptionId,
+      dosha,
+    });
   }
 
-  const resolvedAnswers = verifiedAnswers as { questionId: number; selectedOptionId: string; dosha: Dosha }[];
-  const vataScore = resolvedAnswers.filter((a) => a.dosha === "vata").length;
-  const pittaScore = resolvedAnswers.filter((a) => a.dosha === "pitta").length;
-  const kaphaScore = resolvedAnswers.filter((a) => a.dosha === "kapha").length;
-  const total = resolvedAnswers.length;
+  // 5. Calculate scores
+  const vataScore = verifiedAnswers.filter((answer) => answer.dosha === "vata").length;
+  const pittaScore = verifiedAnswers.filter((answer) => answer.dosha === "pitta").length;
+  const kaphaScore = verifiedAnswers.filter((answer) => answer.dosha === "kapha").length;
+  const total = verifiedAnswers.length;
 
   let vataPct = Math.round((vataScore / total) * 100);
   let pittaPct = Math.round((pittaScore / total) * 100);
   let kaphaPct = Math.round((kaphaScore / total) * 100);
 
-  // Math rounding adjustments to sum to exactly 100
-  const diff = 100 - (vataPct + pittaPct + kaphaPct);
-  if (diff !== 0) {
-    if (vataPct >= pittaPct && vataPct >= kaphaPct) vataPct += diff;
-    else if (pittaPct >= vataPct && pittaPct >= kaphaPct) pittaPct += diff;
-    else kaphaPct += diff;
+  // Adjust rounding so percentages sum to exactly 100
+  const difference = 100 - (vataPct + pittaPct + kaphaPct);
+
+  if (difference !== 0) {
+    if (vataPct >= pittaPct && vataPct >= kaphaPct) {
+      vataPct += difference;
+    } else if (pittaPct >= vataPct && pittaPct >= kaphaPct) {
+      pittaPct += difference;
+    } else {
+      kaphaPct += difference;
+    }
   }
 
   const scores: { name: Dosha; value: number }[] = [
@@ -64,12 +209,13 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     { name: "pitta", value: pittaPct },
     { name: "kapha", value: kaphaPct },
   ];
+
   scores.sort((a, b) => b.value - a.value);
 
-  const primaryDosha = scores[0]?.name || "vata";
-  const secondaryDosha = scores[1]?.name || "pitta";
+  const primaryDosha = scores[0].name;
+  const secondaryDosha = scores[1].name;
 
-  // 1. Insert results into prakriti_results
+  // 6. Save assessment result
   const { data: resultRecord, error: resultError } = await supabase
     .from("prakriti_results")
     .insert({
@@ -88,16 +234,23 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     .single();
 
   if (resultError || !resultRecord) {
-    console.error("Submit Prakriti error:", resultError);
-    return NextResponse.json({ code: "SUBMIT_FAILED", message: "Failed to save Prakriti results." }, { status: 500 });
+    console.error("Submit Prakriti result insert failed:", resultError);
+
+    return NextResponse.json(
+      {
+        code: "SUBMIT_FAILED",
+        message: "Failed to save Prakriti results.",
+      },
+      { status: 500 }
+    );
   }
 
-  // 2. Insert audit details into prakriti_answers
-  const auditAnswers = resolvedAnswers.map((ans) => ({
+  // 7. Save answer audit records
+  const auditAnswers = verifiedAnswers.map((answer) => ({
     result_id: resultRecord.id,
-    question_id: ans.questionId,
-    option_id: ans.selectedOptionId,
-    dosha: ans.dosha,
+    question_id: answer.questionId,
+    option_id: answer.selectedOptionId,
+    dosha: answer.dosha,
   }));
 
   const { error: answersError } = await supabase
@@ -105,11 +258,12 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     .insert(auditAnswers);
 
   if (answersError) {
-    console.error("Submit Prakriti answers audit error:", answersError);
+    // Keep the assessment result, but log the audit failure for investigation.
+    console.error("Prakriti answer audit insert failed:", answersError);
   }
 
-  // 3. Mark users table as completed
-  await supabase
+  // 8. Update user's assessment status
+  const { error: userUpdateError } = await supabase
     .from("users")
     .update({
       prakriti_completed: true,
@@ -118,8 +272,12 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     })
     .eq("id", userId);
 
-  // 4. Log in activity log
-  await supabase
+  if (userUpdateError) {
+    console.error("Prakriti user update failed:", userUpdateError);
+  }
+
+  // 9. Log activity
+  const { error: activityError } = await supabase
     .from("activity_log")
     .insert({
       user_id: userId,
@@ -128,13 +286,21 @@ export const POST = withApiHandler(async (request: NextRequest) => {
       description: `Discovered Prakriti constitution: Dominant ${primaryDosha.toUpperCase()} (Secondary: ${secondaryDosha.toUpperCase()}).`,
     });
 
-  return NextResponse.json({
-    id: resultRecord.id,
-    vataPct,
-    pittaPct,
-    kaphaPct,
-    primaryDosha,
-    secondaryDosha,
-    completedAt: resultRecord.completed_at,
-  }, { status: 200 });
+  if (activityError) {
+    console.error("Prakriti activity log insert failed:", activityError);
+  }
+
+  // 10. Return result
+  return NextResponse.json(
+    {
+      id: resultRecord.id,
+      vataPct,
+      pittaPct,
+      kaphaPct,
+      primaryDosha,
+      secondaryDosha,
+      completedAt: resultRecord.completed_at,
+    },
+    { status: 200 }
+  );
 });
