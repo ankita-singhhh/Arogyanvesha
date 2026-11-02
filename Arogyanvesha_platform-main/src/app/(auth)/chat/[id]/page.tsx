@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -210,7 +211,21 @@ export default function ChatConversationPage() {
 
   const conversation = conversations.find((c) => c.id === conversationId);
 
-  /* Load messages; create a fresh conversation if the ID is missing */
+  /* Create a new conversation */
+  const createFreshConversation = React.useCallback(async () => {
+    const { data: newConversation } = await api.post<ApiConversation>(
+      "/chat/conversations",
+      { title: "New consultation" }
+    );
+
+    setActiveConversation(newConversation.id);
+    setMessages([]);
+    router.replace(`/chat/${newConversation.id}`);
+
+    return newConversation.id;
+  }, [api, router, setActiveConversation, setMessages]);
+
+  /* Load messages; recover if conversation ID is stale */
   React.useEffect(() => {
     let cancelled = false;
 
@@ -244,15 +259,7 @@ export default function ChatConversationPage() {
 
         if (status === 404) {
           try {
-            const { data: newConversation } =
-              await api.post<ApiConversation>(
-                "/chat/conversations",
-                { title: "New consultation" }
-              );
-
-            if (cancelled) return;
-
-            router.replace(`/chat/${newConversation.id}`);
+            await createFreshConversation();
           } catch {
             if (!cancelled) {
               setSendError("Could not start a new consultation.");
@@ -271,7 +278,7 @@ export default function ChatConversationPage() {
     };
   }, [
     conversationId,
-    router,
+    createFreshConversation,
     setActiveConversation,
     setMessages,
   ]);
@@ -295,41 +302,58 @@ export default function ChatConversationPage() {
       inputRef.current.style.height = "24px";
     }
 
-    const userMsg: Message = {
-      id: generateId(),
-      conversationId,
-      role: "user",
-      content: text,
-      createdAt: new Date().toISOString(),
-    };
-
-    addMessage(userMsg);
-
-    if (messages.filter((m) => m.role === "user").length === 0) {
-      updateConversation(conversationId, {
-        title: text.length > 50 ? text.slice(0, 50) + "…" : text,
-        lastMessage: text,
-      });
-    }
-
     setIsTyping(true);
 
     try {
+      let activeId = conversationId;
+
+      // Check whether this conversation still exists.
+      try {
+        await api.get(
+          `/chat/conversations/${activeId}/messages`
+        );
+      } catch (error) {
+        const status = (
+          error as { response?: { status?: number } }
+        )?.response?.status;
+
+        if (status !== 404) throw error;
+
+        activeId = await createFreshConversation();
+      }
+
+      const userMsg: Message = {
+        id: generateId(),
+        conversationId: activeId,
+        role: "user",
+        content: text,
+        createdAt: new Date().toISOString(),
+      };
+
+      addMessage(userMsg);
+
+      if (messages.filter((m) => m.role === "user").length === 0) {
+        updateConversation(activeId, {
+          title: text.length > 50 ? text.slice(0, 50) + "…" : text,
+          lastMessage: text,
+        });
+      }
+
       const { data } = await api.post<ApiMessage>(
-        `/chat/conversations/${conversationId}/messages`,
+        `/chat/conversations/${activeId}/messages`,
         { content: text }
       );
 
       addMessage({
         id: data.id,
-        conversationId,
+        conversationId: activeId,
         role: "assistant",
         content: data.content,
         createdAt: data.created_at,
         confidence: data.confidence ?? undefined,
       });
 
-      updateConversation(conversationId, {
+      updateConversation(activeId, {
         lastMessage: data.content.slice(0, 80),
         updatedAt: data.created_at,
       });
